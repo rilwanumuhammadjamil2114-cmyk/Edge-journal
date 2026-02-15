@@ -480,13 +480,7 @@
             document.getElementById('losingTrades').textContent = losing;
             document.getElementById('winRate').textContent = winRate + '%';
 
-            const tbody = document.getElementById('tradesTableBody');
-            if (!trades.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No trades yet</td></tr>';
-                return;
-            }
-            const sorted = [...trades].sort((a,b) => new Date(b.date) - new Date(a.date));
-            let html = '';
+            
             sorted.forEach(trade => {
                 const pnlClass = trade.profitLoss > 0 ? 'profit' : 'loss';
                 html += `<tr>
