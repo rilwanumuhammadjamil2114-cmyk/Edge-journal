@@ -6,8 +6,6 @@
     <title>Edge Journal</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Font: Inter -->
@@ -74,10 +72,6 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102,126,234,0.3);
         }
-        .btn-outline-secondary {
-            border-radius: 30px;
-            padding: 12px;
-        }
         .dashboard-container {
             display: none;
             max-width: 900px;
@@ -120,12 +114,6 @@
             font-weight: 700;
             color: white;
             margin: 0;
-        }
-        .chart-card {
-            background: #131a2c;
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 24px;
         }
         .add-trade-btn {
             background: #2f3a5c;
@@ -190,15 +178,10 @@
         .btn-close { filter: invert(1); }
         .dev-only { display: none; }
         body.dev-mode .dev-only { display: block; }
-        .phone-login-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-        }
     </style>
 </head>
 <body>
-    <!-- Login Container with Edge Journal Header -->
+    <!-- Login Container -->
     <div class="login-container" id="loginContainer">
         <div style="width: 100%; max-width: 420px;">
             <div class="login-header">
@@ -207,11 +190,11 @@
             </div>
             <div class="login-card">
                 <ul class="nav nav-tabs justify-content-center mb-4" id="authTabs">
-                    <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login">Email Login</button></li>
+                    <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login">Login</button></li>
                     <li class="nav-item"><button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup">Sign Up</button></li>
                 </ul>
                 <div class="tab-content">
-                    <!-- Email Login Tab -->
+                    <!-- Login Tab -->
                     <div class="tab-pane fade show active" id="login">
                         <form id="loginForm">
                             <div class="mb-3">
@@ -220,29 +203,12 @@
                             <div class="mb-3">
                                 <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
                             </div>
-                            <button type="submit" class="btn btn-primary w-100 mb-3">Login with Email</button>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
                         </form>
 
-                        <!-- Phone OTP Login Section -->
-                        <div class="phone-login-section">
-                            <p class="text-muted small text-center mb-3">or login with phone</p>
-                            <div id="phoneStep1">
-                                <div class="mb-3">
-                                    <input type="tel" class="form-control" id="loginPhone" placeholder="Phone number (e.g., +1234567890)">
-                                </div>
-                                <button class="btn btn-outline-secondary w-100 mb-2" id="sendOtpBtn">Send OTP</button>
-                            </div>
-                            <div id="phoneStep2" style="display: none;">
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="otpCode" placeholder="Enter 6-digit OTP">
-                                </div>
-                                <button class="btn btn-primary w-100" id="verifyOtpBtn">Verify & Login</button>
-                                <button class="btn btn-link btn-sm w-100 mt-2" id="backToPhoneBtn">← Back</button>
-                            </div>
-                        </div>
-
-                        <div class="text-center dev-only mt-2">
-                            <a href="#" class="text-muted small" onclick="viewStoredUsers()"><i class="fas fa-eye me-1"></i>View stored users</a>
+                        <!-- Dev-only link to view all stored users -->
+                        <div class="text-center dev-only">
+                            <a href="#" class="text-muted small" onclick="viewAllStoredData()"><i class="fas fa-database me-1"></i>View all stored users & trades (dev)</a>
                         </div>
                     </div>
 
@@ -256,9 +222,6 @@
                                 <input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
                             </div>
                             <div class="mb-3">
-                                <input type="tel" class="form-control" id="signupPhone" placeholder="Phone number (e.g., +1234567890)" required>
-                            </div>
-                            <div class="mb-3">
                                 <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Sign Up</button>
@@ -270,7 +233,7 @@
         </div>
     </div>
 
-    <!-- Dashboard Container (with updated brand) -->
+    <!-- Dashboard Container -->
     <div class="dashboard-container" id="dashboardContainer">
         <nav class="navbar navbar-dark bg-transparent mb-3">
             <div class="container-fluid px-0">
@@ -282,6 +245,7 @@
             </div>
         </nav>
 
+        <!-- Stats Cards -->
         <div class="stats-flex-container">
             <div class="stats-row">
                 <div class="stat-card">
@@ -305,12 +269,12 @@
             </div>
         </div>
 
-       
-
+        <!-- Add Trade Button -->
         <button class="btn add-trade-btn" data-bs-toggle="modal" data-bs-target="#tradeModal" id="addTradeBtn">
             <i class="fas fa-plus-circle"></i> Add New Trade
         </button>
 
+        <!-- Trades Table -->
         <div class="trades-section">
             <h3><i class="fas fa-list me-2"></i>Trades</h3>
             <div class="table-responsive">
@@ -324,7 +288,7 @@
         </div>
     </div>
 
-    <!-- Trade Modal (unchanged) -->
+    <!-- Trade Modal -->
     <div class="modal fade" id="tradeModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -390,20 +354,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ---------- localStorage Keys ----------
-        const USERS_KEY = 'trading_journal_users';
-        const CURRENT_USER_KEY = 'trading_journal_current_user';
+        // ---------- localStorage Keys (permanent) ----------
+        const USERS_KEY = 'edge_journal_users';
+        const TRADES_PREFIX = 'edge_trades_';  // will be followed by userId
+        const CURRENT_USER_KEY = 'edge_current_user';
 
+        // ---------- Global variables ----------
         let trades = [];
-        let logs = [];
         let currentUser = null;
-        let chartInstance = null;
-        let pendingOtp = null;
-        let pendingPhone = null;
 
-        function getTradesKey() { return currentUser ? `trades_user_${currentUser.id}` : null; }
-        function getLogsKey() { return currentUser ? `logs_user_${currentUser.id}` : null; }
+        // ---------- User management ----------
+        function getUsers() {
+            return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
+        }
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+        }
 
+        // ---------- Trade management (per user) ----------
+        function getTradesKey() {
+            return currentUser ? `${TRADES_PREFIX}${currentUser.id}` : null;
+        }
         function getTrades() {
             if (!currentUser) return [];
             return JSON.parse(localStorage.getItem(getTradesKey()) || '[]');
@@ -412,83 +383,33 @@
             if (!currentUser) return;
             localStorage.setItem(getTradesKey(), JSON.stringify(trades));
         }
-        function getLogs() {
-            if (!currentUser) return [];
-            return JSON.parse(localStorage.getItem(getLogsKey()) || '[]');
-        }
-        function saveLogs() {
-            if (!currentUser) return;
-            localStorage.setItem(getLogsKey(), JSON.stringify(logs));
-        }
         function loadData() {
             if (!currentUser) return;
             trades = getTrades();
-            logs = getLogs();
         }
 
-        function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
-        function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
-
+        // ---------- Helper Functions ----------
         function showMessage(message, type = 'danger', container = 'messageArea') {
             const msgDiv = document.getElementById(container);
             if (!msgDiv) return;
             msgDiv.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
-            setTimeout(() => { const alert = msgDiv.querySelector('.alert'); if (alert) alert.remove(); }, 3000);
+            setTimeout(() => {
+                const alert = msgDiv.querySelector('.alert');
+                if (alert) alert.remove();
+            }, 3000);
         }
 
-        function generateId() { return Date.now() + Math.floor(Math.random() * 1000); }
-
-        function addLog(action, tradeId, instrument, details) {
-            if (!currentUser) return;
-            logs.push({ id: generateId(), timestamp: new Date().toISOString(), action, tradeId, instrument, details });
-            saveLogs();
+        function generateId() {
+            return Date.now() + Math.floor(Math.random() * 1000);
         }
 
-        // Chart rendering
-        function renderChart() {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-            if (!trades.length) {
-                chartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: { labels: [], datasets: [] },
-                    options: { plugins: { title: { display: true, text: 'No trades yet' } } }
-                });
-                return;
-            }
-            const sorted = [...trades].sort((a,b) => new Date(a.date) - new Date(b.date));
-            const labels = sorted.map(t => new Date(t.date).toLocaleDateString());
-            let cumulative = 0;
-            const data = sorted.map(t => { cumulative += t.profitLoss; return cumulative; });
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Cumulative P&L ($)',
-                        data,
-                        borderColor: '#4caf50',
-                        backgroundColor: 'rgba(76,175,80,0.1)',
-                        tension: 0.1,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: false, grid: { color: '#1e2538' }, ticks: { color: '#8a8f9c' } },
-                             x: { ticks: { color: '#8a8f9c', maxRotation: 0, autoSkip: true } } }
-                }
-            });
-        }
-
-        // Dashboard rendering
+        // ---------- Dashboard Rendering ----------
         function renderDashboard() {
             const total = trades.length;
             const winning = trades.filter(t => t.profitLoss > 0).length;
             const losing = total - winning;
             const winRate = total ? ((winning / total) * 100).toFixed(1) : 0;
+
             document.getElementById('totalTrades').textContent = total;
             document.getElementById('winningTrades').textContent = winning;
             document.getElementById('losingTrades').textContent = losing;
@@ -502,6 +423,7 @@
                 tbody.innerHTML = '<tr><td colspan="7" class="text-center">No trades yet</td></tr>';
                 return;
             }
+
             const sorted = [...trades].sort((a,b) => new Date(b.date) - new Date(a.date));
             let html = '';
             sorted.forEach(trade => {
@@ -520,13 +442,13 @@
                 </tr>`;
             });
             tbody.innerHTML = html;
-            renderChart();
         }
 
-        // Trade CRUD
+        // ---------- Trade CRUD ----------
         window.editTrade = function(id) {
             const trade = trades.find(t => t.id == id);
             if (!trade) return;
+
             document.getElementById('tradeId').value = trade.id;
             document.getElementById('tradeDate').value = trade.date.split('T')[0];
             document.getElementById('tradeInstrument').value = trade.instrument;
@@ -537,25 +459,28 @@
             document.getElementById('tradeTakeProfit').value = trade.takeProfit || '';
             document.getElementById('tradeProfitLoss').value = trade.profitLoss;
             document.getElementById('tradeNotes').value = trade.notes || '';
+
             document.getElementById('tradeModalLabel').textContent = 'Edit Trade';
             new bootstrap.Modal(document.getElementById('tradeModal')).show();
         };
+
         window.deleteTrade = function(id) {
             if (!confirm('Delete this trade?')) return;
             const trade = trades.find(t => t.id == id);
             if (trade) {
-                addLog('DELETE', id, trade.instrument, `Deleted`);
                 trades = trades.filter(t => t.id != id);
                 saveTrades();
                 renderDashboard();
             }
         };
+
         document.getElementById('addTradeBtn').addEventListener('click', function() {
             document.getElementById('tradeForm').reset();
             document.getElementById('tradeId').value = '';
             document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('tradeModalLabel').textContent = 'Add New Trade';
         });
+
         document.getElementById('saveTradeBtn').addEventListener('click', function() {
             const id = document.getElementById('tradeId').value;
             const tradeData = {
@@ -569,76 +494,72 @@
                 profitLoss: parseFloat(document.getElementById('tradeProfitLoss').value),
                 notes: document.getElementById('tradeNotes').value
             };
+
             if (id) {
+                // Edit
                 const index = trades.findIndex(t => t.id == id);
                 if (index !== -1) {
                     tradeData.id = id;
                     trades[index] = tradeData;
-                    addLog('EDIT', id, tradeData.instrument, `Edited`);
                 }
             } else {
+                // Add
                 tradeData.id = generateId();
                 trades.push(tradeData);
-                addLog('ADD', tradeData.id, tradeData.instrument, `Added`);
             }
+
             saveTrades();
             renderDashboard();
             bootstrap.Modal.getInstance(document.getElementById('tradeModal')).hide();
         });
 
-        // Email login
+        // ---------- Login ----------
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
+
             const users = getUsers();
             const user = users.find(u => u.email === email && u.password === password);
-            if (!user) { showMessage('Invalid credentials.', 'danger'); return; }
-            loginUser(user);
-        });
-
-        // Phone OTP
-        document.getElementById('sendOtpBtn').addEventListener('click', function() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            if (!phone) { showMessage('Please enter phone number.', 'warning'); return; }
-            const users = getUsers();
-            const user = users.find(u => u.phone === phone);
-            if (!user) { showMessage('Phone number not registered.', 'danger'); return; }
-            pendingOtp = Math.floor(100000 + Math.random() * 900000).toString();
-            pendingPhone = phone;
-            alert(`[SIMULATED] Your OTP is: ${pendingOtp}`);
-            showMessage('OTP sent to your phone.', 'success');
-            document.getElementById('phoneStep1').style.display = 'none';
-            document.getElementById('phoneStep2').style.display = 'block';
-        });
-
-        document.getElementById('verifyOtpBtn').addEventListener('click', function() {
-            const enteredOtp = document.getElementById('otpCode').value.trim();
-            if (!enteredOtp || enteredOtp !== pendingOtp) {
-                showMessage('Invalid OTP.', 'danger');
+            if (!user) {
+                showMessage('Invalid credentials.', 'danger');
                 return;
             }
-            const users = getUsers();
-            const user = users.find(u => u.phone === pendingPhone);
-            if (!user) { showMessage('User not found.', 'danger'); return; }
+
             loginUser(user);
-            pendingOtp = null;
-            pendingPhone = null;
-            document.getElementById('phoneStep2').style.display = 'none';
-            document.getElementById('phoneStep1').style.display = 'block';
-            document.getElementById('loginPhone').value = '';
-            document.getElementById('otpCode').value = '';
         });
 
-        document.getElementById('backToPhoneBtn').addEventListener('click', function() {
-            document.getElementById('phoneStep2').style.display = 'none';
-            document.getElementById('phoneStep1').style.display = 'block';
-            pendingOtp = null;
-            pendingPhone = null;
+        // ---------- Signup ----------
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+
+            if (!name || !email || !password) {
+                showMessage('All fields required.', 'warning');
+                return;
+            }
+
+            const users = getUsers();
+            if (users.find(u => u.email === email)) {
+                showMessage('Email already exists.', 'danger');
+                return;
+            }
+
+            const newUser = { id: generateId(), name, email, password };
+            users.push(newUser);
+            saveUsers(users);
+
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = '';
+            new bootstrap.Tab(document.getElementById('login-tab')).show();
+            showMessage('Signup successful! Please login.', 'success');
+            e.target.reset();
         });
 
         function loginUser(user) {
-            currentUser = { id: user.id, name: user.name, email: user.email, phone: user.phone };
+            currentUser = { id: user.id, name: user.name, email: user.email };
             localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
             loadData();
             document.getElementById('loginContainer').style.display = 'none';
@@ -646,36 +567,7 @@
             renderDashboard();
         }
 
-        // Signup
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const phone = document.getElementById('signupPhone').value.trim();
-            const password = document.getElementById('signupPassword').value;
-            if (!name || !email || !phone || !password) {
-                showMessage('All fields required.', 'warning');
-                return;
-            }
-            const users = getUsers();
-            if (users.find(u => u.email === email)) {
-                showMessage('Email already exists.', 'danger');
-                return;
-            }
-            if (users.find(u => u.phone === phone)) {
-                showMessage('Phone number already registered.', 'danger');
-                return;
-            }
-            const newUser = { id: generateId(), name, email, phone, password };
-            users.push(newUser);
-            saveUsers(users);
-            document.getElementById('loginEmail').value = email;
-            document.getElementById('loginPassword').value = '';
-            new bootstrap.Tab(document.getElementById('login-tab')).show();
-            showMessage('Signup successful! You can now login.', 'success');
-            e.target.reset();
-        });
-
+        // ---------- Logout ----------
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem(CURRENT_USER_KEY);
             currentUser = null;
@@ -683,23 +575,35 @@
             document.getElementById('loginContainer').style.display = 'flex';
         });
 
-        // Dev mode
+        // ---------- Dev mode: access to ALL stored data ----------
         function enableDevMode() {
             if (new URLSearchParams(window.location.search).get('dev') === 'true') {
                 document.body.classList.add('dev-mode');
             }
         }
-        window.viewStoredUsers = function() {
+
+        window.viewAllStoredData = function() {
             const users = getUsers();
-            if (!users.length) { showMessage('No users.', 'info'); return; }
-            let list = users.map(u => `ID: ${u.id}, Name: ${u.name}, Email: ${u.email}, Phone: ${u.phone}`).join('\n');
-            alert('Stored Users:\n' + list);
-            console.table(users);
+            let output = "=== ALL STORED USERS ===\n";
+            users.forEach(u => {
+                output += `ID: ${u.id}, Name: ${u.name}, Email: ${u.email}, Password: ${u.password}\n`;
+                // Load this user's trades
+                const tradeKey = `${TRADES_PREFIX}${u.id}`;
+                const userTrades = JSON.parse(localStorage.getItem(tradeKey) || '[]');
+                output += `  Trades (${userTrades.length}):\n`;
+                userTrades.forEach(t => {
+                    output += `    - ${t.date} ${t.instrument} ${t.direction} P&L: $${t.profitLoss}\n`;
+                });
+            });
+            alert(output);
+            console.log(output);
         };
 
-        // Initialize
+        // ---------- Initialize ----------
         (function init() {
             enableDevMode();
+
+            // Check for saved session
             const savedUser = localStorage.getItem(CURRENT_USER_KEY);
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
@@ -708,17 +612,18 @@
                 document.getElementById('dashboardContainer').style.display = 'block';
                 renderDashboard();
             }
+
+            // Create demo user if no users exist
             const users = getUsers();
             if (!users.length) {
                 users.push({
                     id: 1,
                     name: 'Demo User',
                     email: 'demo@example.com',
-                    phone: '+1234567890',
                     password: 'password123'
                 });
                 saveUsers(users);
-                console.log('Demo user created. Phone: +1234567890');
+                console.log('Demo user created. Email: demo@example.com, Password: password123');
             }
         })();
     </script>
