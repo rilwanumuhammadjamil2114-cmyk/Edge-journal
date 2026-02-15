@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Journal</title>
-    <!-- Bootstrap 5 CSS (minimal) -->
+    <title>Edge Journal</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -26,6 +26,22 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-header h1 {
+            font-size: 42px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+        }
+        .login-header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 16px;
+            font-weight: 400;
         }
         .login-card {
             background: rgba(255,255,255,0.95);
@@ -70,6 +86,11 @@
             border-radius: 32px;
             padding: 24px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: 700;
+            color: white !important;
         }
         .stats-row {
             display: flex;
@@ -177,75 +198,90 @@
     </style>
 </head>
 <body>
-    <!-- Login Container -->
+    <!-- Login Container with Edge Journal Header -->
     <div class="login-container" id="loginContainer">
-        <div class="login-card">
-            <h3 class="text-center mb-4" style="color:#333; font-weight:700;">📒 Trading Journal</h3>
-            <ul class="nav nav-tabs justify-content-center mb-4" id="authTabs">
-                <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login">Email Login</button></li>
-                <li class="nav-item"><button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup">Sign Up</button></li>
-            </ul>
-            <div class="tab-content">
-                <!-- Email Login Tab -->
-                <div class="tab-pane fade show active" id="login">
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
-                        </div>
-                        <div class="mb-3">
-                            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Login with Email</button>
-                    </form>
-
-                    <!-- Phone OTP Login Section -->
-                    <div class="phone-login-section">
-                        <p class="text-muted small text-center mb-3">or login with phone</p>
-                        <div id="phoneStep1">
-                            <div class="mb-3">
-                                <input type="tel" class="form-control" id="loginPhone" placeholder="Phone number (e.g., +1234567890)">
-                            </div>
-                            <button class="btn btn-outline-secondary w-100 mb-2" id="sendOtpBtn">Send OTP</button>
-                        </div>
-                        <div id="phoneStep2" style="display: none;">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="otpCode" placeholder="Enter 6-digit OTP">
-                            </div>
-                            <button class="btn btn-primary w-100" id="verifyOtpBtn">Verify & Login</button>
-                            <button class="btn btn-link btn-sm w-100 mt-2" id="backToPhoneBtn">← Back</button>
-                        </div>
-                    </div>
-
-                    <div class="text-center dev-only mt-2">
-                        <a href="#" class="text-muted small" onclick="viewStoredUsers()"><i class="fas fa-eye me-1"></i>View stored users</a>
-                    </div>
-                </div>
-
-                <!-- Signup Tab (now includes phone) -->
-                <div class="tab-pane fade" id="signup">
-                    <form id="signupForm">
-                        <div class="mb-3">
-                            <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
-                        </div>
-                        <div class="mb-3">
-                            <input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
-                        </div>
-                        <div class="mb-3">
-                            <input type="tel" class="form-control" id="signupPhone" placeholder="Phone number (e.g., +1234567890)" required>
-                        </div>
-                        <div class="mb-3">
-                            <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-                    </form>
-                </div>
+        <div style="width: 100%; max-width: 420px;">
+            <div class="login-header">
+                <h1>Edge Journal</h1>
+                <p>Your trading companion</p>
             </div>
-            <div id="messageArea" class="mt-3"></div>
+            <div class="login-card">
+                <ul class="nav nav-tabs justify-content-center mb-4" id="authTabs">
+                    <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login">Email Login</button></li>
+                    <li class="nav-item"><button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup">Sign Up</button></li>
+                </ul>
+                <div class="tab-content">
+                    <!-- Email Login Tab -->
+                    <div class="tab-pane fade show active" id="login">
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">Login with Email</button>
+                        </form>
+
+                        <!-- Phone OTP Login Section -->
+                        <div class="phone-login-section">
+                            <p class="text-muted small text-center mb-3">or login with phone</p>
+                            <div id="phoneStep1">
+                                <div class="mb-3">
+                                    <input type="tel" class="form-control" id="loginPhone" placeholder="Phone number (e.g., +1234567890)">
+                                </div>
+                                <button class="btn btn-outline-secondary w-100 mb-2" id="sendOtpBtn">Send OTP</button>
+                            </div>
+                            <div id="phoneStep2" style="display: none;">
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="otpCode" placeholder="Enter 6-digit OTP">
+                                </div>
+                                <button class="btn btn-primary w-100" id="verifyOtpBtn">Verify & Login</button>
+                                <button class="btn btn-link btn-sm w-100 mt-2" id="backToPhoneBtn">← Back</button>
+                            </div>
+                        </div>
+
+                        <div class="text-center dev-only mt-2">
+                            <a href="#" class="text-muted small" onclick="viewStoredUsers()"><i class="fas fa-eye me-1"></i>View stored users</a>
+                        </div>
+                    </div>
+
+                    <!-- Signup Tab -->
+                    <div class="tab-pane fade" id="signup">
+                        <form id="signupForm">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="tel" class="form-control" id="signupPhone" placeholder="Phone number (e.g., +1234567890)" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                        </form>
+                    </div>
+                </div>
+                <div id="messageArea" class="mt-3"></div>
+            </div>
         </div>
     </div>
 
-    <!-- Dashboard Container (unchanged, same as before) -->
+    <!-- Dashboard Container (with updated brand) -->
     <div class="dashboard-container" id="dashboardContainer">
+        <nav class="navbar navbar-dark bg-transparent mb-3">
+            <div class="container-fluid px-0">
+                <span class="navbar-brand">📘 Edge Journal</span>
+                <div class="ms-auto">
+                    <span class="text-white-50 me-3" id="welcomeUser"></span>
+                    <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+        </nav>
+
         <div class="stats-flex-container">
             <div class="stats-row">
                 <div class="stat-card">
@@ -268,10 +304,13 @@
                 </div>
             </div>
         </div>
+
        
+
         <button class="btn add-trade-btn" data-bs-toggle="modal" data-bs-target="#tradeModal" id="addTradeBtn">
             <i class="fas fa-plus-circle"></i> Add New Trade
         </button>
+
         <div class="trades-section">
             <h3><i class="fas fa-list me-2"></i>Trades</h3>
             <div class="table-responsive">
@@ -359,12 +398,9 @@
         let logs = [];
         let currentUser = null;
         let chartInstance = null;
-
-        // For OTP simulation
         let pendingOtp = null;
         let pendingPhone = null;
 
-        // User‑specific keys
         function getTradesKey() { return currentUser ? `trades_user_${currentUser.id}` : null; }
         function getLogsKey() { return currentUser ? `logs_user_${currentUser.id}` : null; }
 
@@ -408,7 +444,7 @@
             saveLogs();
         }
 
-        // ---------- Chart rendering (same) ----------
+        // Chart rendering
         function renderChart() {
             const ctx = document.getElementById('performanceChart').getContext('2d');
             if (chartInstance) chartInstance.destroy();
@@ -447,7 +483,7 @@
             });
         }
 
-        // ---------- Dashboard rendering (same) ----------
+        // Dashboard rendering
         function renderDashboard() {
             const total = trades.length;
             const winning = trades.filter(t => t.profitLoss > 0).length;
@@ -457,6 +493,9 @@
             document.getElementById('winningTrades').textContent = winning;
             document.getElementById('losingTrades').textContent = losing;
             document.getElementById('winRate').textContent = winRate + '%';
+            if (currentUser) {
+                document.getElementById('welcomeUser').textContent = `Hi, ${currentUser.name}`;
+            }
 
             const tbody = document.getElementById('tradesTableBody');
             if (!trades.length) {
@@ -484,7 +523,7 @@
             renderChart();
         }
 
-        // ---------- Trade CRUD (same) ----------
+        // Trade CRUD
         window.editTrade = function(id) {
             const trade = trades.find(t => t.id == id);
             if (!trade) return;
@@ -547,7 +586,7 @@
             bootstrap.Modal.getInstance(document.getElementById('tradeModal')).hide();
         });
 
-        // ---------- Login with Email ----------
+        // Email login
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
@@ -558,19 +597,17 @@
             loginUser(user);
         });
 
-        // ---------- Phone OTP Login ----------
+        // Phone OTP
         document.getElementById('sendOtpBtn').addEventListener('click', function() {
             const phone = document.getElementById('loginPhone').value.trim();
             if (!phone) { showMessage('Please enter phone number.', 'warning'); return; }
             const users = getUsers();
             const user = users.find(u => u.phone === phone);
             if (!user) { showMessage('Phone number not registered.', 'danger'); return; }
-            // Simulate sending OTP (generate random 6-digit)
             pendingOtp = Math.floor(100000 + Math.random() * 900000).toString();
             pendingPhone = phone;
-            alert(`[SIMULATED] Your OTP is: ${pendingOtp}`);  // In real app, send via SMS
+            alert(`[SIMULATED] Your OTP is: ${pendingOtp}`);
             showMessage('OTP sent to your phone.', 'success');
-            // Switch to step 2
             document.getElementById('phoneStep1').style.display = 'none';
             document.getElementById('phoneStep2').style.display = 'block';
         });
@@ -581,12 +618,10 @@
                 showMessage('Invalid OTP.', 'danger');
                 return;
             }
-            // OTP correct – log in the user associated with pendingPhone
             const users = getUsers();
             const user = users.find(u => u.phone === pendingPhone);
             if (!user) { showMessage('User not found.', 'danger'); return; }
             loginUser(user);
-            // Reset OTP flow
             pendingOtp = null;
             pendingPhone = null;
             document.getElementById('phoneStep2').style.display = 'none';
@@ -602,7 +637,6 @@
             pendingPhone = null;
         });
 
-        // ---------- Shared login function ----------
         function loginUser(user) {
             currentUser = { id: user.id, name: user.name, email: user.email, phone: user.phone };
             localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
@@ -612,7 +646,7 @@
             renderDashboard();
         }
 
-        // ---------- Signup (now includes phone) ----------
+        // Signup
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('signupName').value.trim();
@@ -635,8 +669,6 @@
             const newUser = { id: generateId(), name, email, phone, password };
             users.push(newUser);
             saveUsers(users);
-
-            // Auto-fill login email and switch to email tab
             document.getElementById('loginEmail').value = email;
             document.getElementById('loginPassword').value = '';
             new bootstrap.Tab(document.getElementById('login-tab')).show();
@@ -644,7 +676,14 @@
             e.target.reset();
         });
 
-        // ---------- Dev mode ----------
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem(CURRENT_USER_KEY);
+            currentUser = null;
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+        });
+
+        // Dev mode
         function enableDevMode() {
             if (new URLSearchParams(window.location.search).get('dev') === 'true') {
                 document.body.classList.add('dev-mode');
@@ -658,7 +697,7 @@
             console.table(users);
         };
 
-        // ---------- Initialize ----------
+        // Initialize
         (function init() {
             enableDevMode();
             const savedUser = localStorage.getItem(CURRENT_USER_KEY);
@@ -669,7 +708,6 @@
                 document.getElementById('dashboardContainer').style.display = 'block';
                 renderDashboard();
             }
-            // Create demo user if none exists (with phone)
             const users = getUsers();
             if (!users.length) {
                 users.push({
@@ -680,7 +718,7 @@
                     password: 'password123'
                 });
                 saveUsers(users);
-                console.log('Demo user created. Phone: +1234567890, OTP simulation works.');
+                console.log('Demo user created. Phone: +1234567890');
             }
         })();
     </script>
