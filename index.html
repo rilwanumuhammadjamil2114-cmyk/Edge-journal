@@ -1,135 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>from pluto_money-fatima sada!</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to top, #ffe259, #ffa220);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      color: #fff;
-    }
-
-    .card {
-      background: rgba(0, 0, 0, 0.35);
-      border-radius: 25px;
-      padding: 40px 60px;
-      max-width: 700px;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      animation: fadeIn 2s ease-in-out;
-      position: relative;
-    }
-
-    h1 {
-      font-size: 3em;
-      margin-bottom: 20px;
-      color: #ffe600;
-      animation: pop 1.5s ease forwards;
-    }
-
-    p {
-      font-size: 1.2em;
-      line-height: 1.6;
-      color: #ffffff;
-      margin: 0;
-    }
-
-    .heart {
-      color: #ff385c;
-      animation: beat 1s infinite;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(-30px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-
-    @keyframes beat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-    }
-
-    @keyframes pop {
-      0% { transform: scale(0); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    /* Animated sun and clouds */
-    .sun {
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 150px;
-      height: 150px;
-      background: #ffe600;
-      border-radius: 50%;
-      animation: rotateSun 20s linear infinite;
-      box-shadow: 0 0 50px 15px #ffe600;
-    }
-
-    @keyframes rotateSun {
-      0% { transform: rotate(0deg) translateX(0) rotate(0deg); }
-      100% { transform: rotate(360deg) translateX(0) rotate(-360deg); }
-    }
-
-    .cloud {
-      position: absolute;
-      background: #fff;
-      background: rgba(255,255,255,0.8);
-      border-radius: 50%;
-      width: 100px;
-      height: 60px;
-      top: 50px;
-      animation: moveClouds 60s linear infinite;
-    }
-
-    .cloud::before, .cloud::after {
-      content: '';
-      position: absolute;
-      background: rgba(255,255,255,0.8);
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-    }
-
-    .cloud::before { top: -30px; left: 10px; }
-    .cloud::after { top: -20px; left: 40px; }
-
-    @keyframes moveClouds {
-      0% { left: -150px; }
-      100% { left: 100%; }
-    }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trading Journal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">📒 Trading Journal</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('add_trade') }}">Add Trade</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-  <!-- Sun & Clouds -->
-  <div class="sun"></div>
-  <div class="cloud" style="top: 80px; animation-duration: 70s;"></div>
-  <div class="cloud" style="top: 150px; width: 120px; height: 70px; animation-duration: 90s;"></div>
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
 
-  <div class="card">
-    <h1>Good Morning, Fatima Sada! <span class="heart">❤️</span></h1>
-    <p>
-      I just wanted to start your day by reminding you how amazing you are.  
-      May your morning be as bright as your smile, as cheerful as your laughter,  
-      and as inspiring as your heart. I hope today brings you countless little joys,  
-      opportunities to shine, and moments that make you feel loved and appreciated.<br><br>
-      Remember to take a deep breath, embrace the day with confidence, and never forget how special you are.  
-      May your morning coffee (or tea) be warm, your energy high, and your worries light.  
-      Let today be a fresh canvas, full of possibilities, and may every step you take lead you closer to your dreams.<br><br>
-      Thank you for being such a wonderful friend, and for always bringing positivity and happiness into the lives of everyone around you.  
-      I hope this morning reminds you that you are cherished, valued, and capable of amazing things.<br><br>
-      So, rise and shine, Fatima Sada! Let the day greet you with open arms, and may every moment be as beautiful as your soul. 💛🌅✨
-    </p>
-  </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
