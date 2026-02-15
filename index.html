@@ -2,255 +2,422 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trading Journal</title>
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap 5 CSS (minimal, only for grid and components) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+        body {
+            background-color: #0b0f1c;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #e0e0e0;
+            padding-bottom: 70px; /* space for bottom nav */
+        }
+        /* Hide login container initially? We'll handle via JS */
         .login-container {
             min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        .login-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        .card-header {
-            background: transparent;
-            border-bottom: none;
-            text-align: center;
-            padding-top: 20px;
+        .dashboard-container {
+            display: none;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #0b0f1c;
         }
-        .nav-tabs .nav-link.active {
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
+        /* Header with price */
+        .price-header {
+            padding: 16px 20px 8px;
+            background: #0b0f1c;
+            border-bottom: 1px solid #1e2538;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 25px;
-            padding: 10px;
+        .price-header .symbol {
+            font-size: 24px;
             font-weight: 600;
+            color: white;
         }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        .price-header .price {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
         }
-        .form-control {
-            border-radius: 10px;
-            padding: 12px;
+        .price-header .change {
+            font-size: 16px;
+            color: #4caf50;
         }
-        .dev-link {
-            color: #6c757d;
-            font-size: 0.9rem;
+        .price-header .change.negative {
+            color: #f44336;
+        }
+        /* Timeframe tabs */
+        .timeframe-tabs {
+            display: flex;
+            gap: 4px;
+            padding: 12px 20px;
+            background: #131a2c;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            border-bottom: 1px solid #1e2538;
+        }
+        .timeframe-tabs::-webkit-scrollbar {
+            display: none;
+        }
+        .timeframe-tab {
+            background: #1e2538;
+            color: #8a8f9c;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s;
         }
+        .timeframe-tab.active {
+            background: #2f3a5c;
+            color: white;
+        }
+        /* Price ladder (vertical list) */
+        .price-ladder {
+            background: #0f1422;
+            padding: 12px 20px;
+            border-bottom: 1px solid #1e2538;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .price-ladder ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .price-ladder li {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 15px;
+            color: #b0b7c4;
+            border-bottom: 1px solid #1a2133;
+        }
+        .price-ladder li:last-child {
+            border-bottom: none;
+        }
+        .price-ladder .price-value {
+            font-weight: 600;
+            color: white;
+        }
+        /* Stats cards (already flex, but adjust colors) */
+        .stats-flex-container {
+            padding: 16px 20px;
+        }
+        .stats-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .stats-row .stat-card {
+            flex: 1;
+            background: #1e2538 !important;
+            border-radius: 16px;
+            padding: 16px 8px;
+            text-align: center;
+            box-shadow: none;
+        }
+        .stat-card h5 {
+            font-size: 14px;
+            color: #8a8f9c;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        .stat-card .display-6 {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+        /* Chart card */
+        .chart-card {
+            background: #131a2c;
+            border-radius: 20px;
+            margin: 0 20px 20px;
+            padding: 16px;
+        }
+        .chart-card .card-header {
+            background: transparent;
+            border: none;
+            color: #8a8f9c;
+            font-size: 14px;
+            padding: 0 0 12px 0;
+        }
+        /* Add trade button */
+        .add-trade-btn {
+            margin: 0 20px 20px;
+            background: #2f3a5c;
+            border: none;
+            border-radius: 30px;
+            padding: 14px;
+            font-weight: 600;
+            color: white;
+            width: calc(100% - 40px);
+            transition: background 0.2s;
+        }
+        .add-trade-btn:hover {
+            background: #3d4a70;
+        }
+        /* Trades table */
+        .trades-section {
+            padding: 0 20px 20px;
+        }
+        .trades-section h3 {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 12px;
+        }
+        .table {
+            color: #b0b7c4;
+            background: #131a2c;
+            border-radius: 16px;
+            overflow: hidden;
+            font-size: 13px;
+        }
+        .table thead th {
+            background: #1e2538;
+            color: #8a8f9c;
+            font-weight: 500;
+            border: none;
+            padding: 12px 8px;
+        }
+        .table tbody td {
+            border-color: #1e2538;
+            padding: 10px 8px;
+        }
+        .profit { color: #4caf50; }
+        .loss { color: #f44336; }
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #131a2c;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid #1e2538;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8a8f9c;
+            font-size: 12px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        .nav-item.active {
+            color: #4caf50;
+        }
+        /* Modal dark theme */
+        .modal-content {
+            background: #1e2538;
+            color: white;
+            border-radius: 20px;
+        }
+        .modal-header {
+            border-bottom-color: #2f3a5c;
+        }
+        .modal-footer {
+            border-top-color: #2f3a5c;
+        }
+        .form-control, .form-select {
+            background: #0f1422;
+            border: 1px solid #2f3a5c;
+            color: white;
+            border-radius: 12px;
+        }
+        .form-control:focus, .form-select:focus {
+            background: #0f1422;
+            color: white;
+            border-color: #4caf50;
+            box-shadow: none;
+        }
+        .btn-close {
+            filter: invert(1);
+        }
+        /* Dev mode */
         .dev-only {
             display: none;
         }
         body.dev-mode .dev-only {
             display: block;
         }
-        .dashboard-container {
-            display: none;
-            padding: 20px 0;
-        }
-        .profit { color: green; font-weight: bold; }
-        .loss { color: red; font-weight: bold; }
-        .stat-card {
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        #performanceChart {
-            max-height: 300px;
-            width: 100%;
-        }
-        /* New stats layout: two rows, each with two cards */
-        .stats-flex-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .stats-row {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .stats-row .stat-card {
-            flex: 1 1 calc(50% - 0.5rem); /* two cards per row, accounting for gap */
-            min-width: 200px;
-        }
-        @media (max-width: 576px) {
-            .stats-row .stat-card {
-                flex: 1 1 100%;
-            }
-        }
-        /* Dark theme for stat cards */
-        .bg-dark-card {
-            background-color: #2c3e50 !important;
-            color: #ecf0f1;
-        }
     </style>
 </head>
 <body>
     <!-- Login Container -->
     <div class="login-container" id="loginContainer">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-5">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>📒 Trading Journal</h3>
-                            <p class="text-muted">Track your trades, improve your strategy</p>
+        <div class="login-card">
+            <h3 class="text-center mb-4" style="color:#333;">📒 Trading Journal</h3>
+            <ul class="nav nav-tabs justify-content-center mb-4" id="authTabs">
+                <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login">Login</button></li>
+                <li class="nav-item"><button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup">Sign Up</button></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="login">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
                         </div>
-                        <div class="card-body p-4">
-                            <ul class="nav nav-tabs justify-content-center mb-4" id="authTabs">
-                                <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login">Login</button></li>
-                                <li class="nav-item"><button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup">Sign Up</button></li>
-                            </ul>
-                            <div class="tab-content">
-                                <!-- Login Form -->
-                                <div class="tab-pane fade show active" id="login">
-                                    <form id="loginForm">
-                                        <div class="mb-3">
-                                            <label for="loginEmail" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="loginEmail" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="loginPassword" class="form-label">Password</label>
-                                            <input type="password" class="form-control" id="loginPassword" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-                                        <div class="text-center dev-only">
-                                            <a href="#" class="dev-link" onclick="viewStoredUsers()">🔍 View stored users (dev only)</a>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!-- Signup Form -->
-                                <div class="tab-pane fade" id="signup">
-                                    <form id="signupForm">
-                                        <div class="mb-3">
-                                            <label for="signupName" class="form-label">Full Name</label>
-                                            <input type="text" class="form-control" id="signupName" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="signupEmail" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="signupEmail" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="signupPassword" class="form-label">Password</label>
-                                            <input type="password" class="form-control" id="signupPassword" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <div id="messageArea" class="mt-3"></div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
                         </div>
-                    </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                        <div class="text-center dev-only">
+                            <a href="#" class="text-muted small" onclick="viewStoredUsers()">🔍 View stored users (dev only)</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="signup">
+                    <form id="signupForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+                    </form>
                 </div>
             </div>
+            <div id="messageArea" class="mt-3"></div>
         </div>
     </div>
 
-    <!-- Dashboard Container -->
+    <!-- Dashboard Container (mobile style) -->
     <div class="dashboard-container" id="dashboardContainer">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="#">📒 Trading Journal</a>
-                <div class="ms-auto">
-                    <span class="navbar-text text-white me-3" id="welcomeUser"></span>
-                    <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
+        <!-- Price Header -->
+        <div class="price-header">
+            <div class="symbol">Bitcoin <span class="float-end" style="font-size: 14px; color:#8a8f9c;">BTC/USD</span></div>
+            <div class="price">69,146.28</div>
+            <div class="change negative">-64.06 (-0.37%)</div>
+        </div>
+
+        <!-- Timeframe Tabs -->
+        <div class="timeframe-tabs">
+            <span class="timeframe-tab active">EURUSD 5m</span>
+            <span class="timeframe-tab">BTCUSD 15m</span>
+            <span class="timeframe-tab">GOLD 30m</span>
+        </div>
+
+        <!-- Price Ladder (like the image) -->
+        <div class="price-ladder">
+            <ul>
+                <li><span>68,200.00</span><span class="price-value">68,200</span></li>
+                <li><span>68,100.00</span><span class="price-value">68,100</span></li>
+                <li><span>68,000.00</span><span class="price-value">68,000</span></li>
+                <li><span>67,900.00</span><span class="price-value">67,900</span></li>
+                <li><span>67,800.00</span><span class="price-value">67,800</span></li>
+                <li><span>67,700.00</span><span class="price-value">67,700</span></li>
+                <li><span>67,600.00</span><span class="price-value">67,600</span></li>
+                <li><span>67,500.00</span><span class="price-value">67,500</span></li>
+                <li><span>67,400.00</span><span class="price-value">67,400</span></li>
+                <li><span>67,300.00</span><span class="price-value">67,300</span></li>
+                <li><span>67,200.00</span><span class="price-value">67,200</span></li>
+                <li><span>67,100.00</span><span class="price-value">67,100</span></li>
+                <li><span>67,000.00</span><span class="price-value">67,000</span></li>
+                <li><span>66,900.00</span><span class="price-value">66,900</span></li>
+                <li><span>66,800.00</span><span class="price-value">66,800</span></li>
+                <li><span>66,700.00</span><span class="price-value">66,700</span></li>
+            </ul>
+        </div>
+
+        <!-- Stats Cards (dark, two rows) -->
+        <div class="stats-flex-container mb-2">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h5>Total Trades</h5>
+                    <p class="display-6" id="totalTrades">0</p>
+                </div>
+                <div class="stat-card">
+                    <h5>Winning</h5>
+                    <p class="display-6" id="winningTrades">0</p>
                 </div>
             </div>
-        </nav>
-
-        <div class="container mt-4">
-            <!-- Stats Cards (2 rows, dark theme) -->
-            <div class="stats-flex-container mb-4">
-                <!-- First row: Total and Winning -->
-                <div class="stats-row">
-                    <div class="stat-card bg-dark-card text-white">
-                        <div class="card-body">
-                            <h5>Total Trades</h5>
-                            <p class="display-6" id="totalTrades">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card bg-dark-card text-white">
-                        <div class="card-body">
-                            <h5>Winning Trades</h5>
-                            <p class="display-6" id="winningTrades">0</p>
-                        </div>
-                    </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <h5>Losing</h5>
+                    <p class="display-6" id="losingTrades">0</p>
                 </div>
-                <!-- Second row: Losing and Win Rate -->
-                <div class="stats-row">
-                    <div class="stat-card bg-dark-card text-white">
-                        <div class="card-body">
-                            <h5>Losing Trades</h5>
-                            <p class="display-6" id="losingTrades">0</p>
-                        </div>
-                    </div>
-                    <div class="stat-card bg-dark-card text-white">
-                        <div class="card-body">
-                            <h5>Win Rate</h5>
-                            <p class="display-6" id="winRate">0%</p>
-                        </div>
-                    </div>
+                <div class="stat-card">
+                    <h5>Win Rate</h5>
+                    <p class="display-6" id="winRate">0%</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Performance Chart -->
-            <div class="card mb-4">
-                <div class="card-header bg-white">
-                    <h5 class="mb-0">Cumulative P&L</h5>
-                </div>
-                <div class="card-body">
-                    <canvas id="performanceChart"></canvas>
-                </div>
-            </div>
+        <!-- Chart Card -->
+        <div class="chart-card">
+            <div class="card-header">Cumulative P&L</div>
+            <canvas id="performanceChart" style="height: 150px; width: 100%;"></canvas>
+        </div>
 
-            <!-- Add Trade Button -->
-            <div class="mb-3">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tradeModal" id="addTradeBtn">+ Add New Trade</button>
-            </div>
+        <!-- Add Trade Button -->
+        <button class="btn add-trade-btn" data-bs-toggle="modal" data-bs-target="#tradeModal" id="addTradeBtn">+ Add New Trade</button>
 
-            <!-- Trades Table -->
+        <!-- Trades Table -->
+        <div class="trades-section">
             <h3>Trades</h3>
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
+                <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Instrument</th>
-                            <th>Direction</th>
-                            <th>Entry</th>
-                            <th>Exit</th>
-                            <th>Stop Loss</th>
-                            <th>Take Profit</th>
-                            <th>P&L</th>
-                            <th>Notes</th>
-                            <th>Actions</th>
+                            <th>Date</th><th>Instr.</th><th>Dir</th><th>P&L</th><th></th>
                         </tr>
                     </thead>
                     <tbody id="tradesTableBody"></tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" data-view="watchlist"><i class="fas fa-star"></i><span>Watchlist</span></div>
+            <div class="nav-item" data-view="chart"><i class="fas fa-chart-line"></i><span>Chart</span></div>
+            <div class="nav-item" data-view="explore"><i class="fas fa-search"></i><span>Explore</span></div>
+            <div class="nav-item" data-view="community"><i class="fas fa-users"></i><span>Community</span></div>
+            <div class="nav-item" data-view="menu"><i class="fas fa-bars"></i><span>Menu</span></div>
+        </div>
     </div>
 
-    <!-- Trade Modal (Add/Edit) -->
+    <!-- Trade Modal (unchanged) -->
     <div class="modal fade" id="tradeModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -277,27 +444,27 @@
                             </select>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="tradeEntryPrice" class="form-label">Entry Price</label>
+                            <div class="col-6 mb-3">
+                                <label for="tradeEntryPrice" class="form-label">Entry</label>
                                 <input type="number" step="0.00001" class="form-control" id="tradeEntryPrice" required>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="tradeExitPrice" class="form-label">Exit Price</label>
+                            <div class="col-6 mb-3">
+                                <label for="tradeExitPrice" class="form-label">Exit</label>
                                 <input type="number" step="0.00001" class="form-control" id="tradeExitPrice" required>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="tradeStopLoss" class="form-label">Stop Loss</label>
+                            <div class="col-6 mb-3">
+                                <label for="tradeStopLoss" class="form-label">Stop</label>
                                 <input type="number" step="0.00001" class="form-control" id="tradeStopLoss">
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="tradeTakeProfit" class="form-label">Take Profit</label>
+                            <div class="col-6 mb-3">
+                                <label for="tradeTakeProfit" class="form-label">TP</label>
                                 <input type="number" step="0.00001" class="form-control" id="tradeTakeProfit">
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="tradeProfitLoss" class="form-label">Profit / Loss ($)</label>
+                            <label for="tradeProfitLoss" class="form-label">P&L ($)</label>
                             <input type="number" step="0.01" class="form-control" id="tradeProfitLoss" required>
                         </div>
                         <div class="mb-3">
@@ -308,15 +475,14 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveTradeBtn">Save Trade</button>
+                    <button type="button" class="btn btn-primary" id="saveTradeBtn">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         // ---------- localStorage Keys ----------
         const USERS_KEY = 'trading_journal_users';
@@ -336,11 +502,10 @@
             return currentUser ? `logs_user_${currentUser.id}` : null;
         }
 
-        // ---------- Data access (scoped to current user) ----------
+        // ---------- Data access ----------
         function getTrades() {
             if (!currentUser) return [];
-            const key = getTradesKey();
-            return JSON.parse(localStorage.getItem(key) || '[]');
+            return JSON.parse(localStorage.getItem(getTradesKey()) || '[]');
         }
         function saveTrades() {
             if (!currentUser) return;
@@ -348,14 +513,12 @@
         }
         function getLogs() {
             if (!currentUser) return [];
-            const key = getLogsKey();
-            return JSON.parse(localStorage.getItem(key) || '[]');
+            return JSON.parse(localStorage.getItem(getLogsKey()) || '[]');
         }
         function saveLogs() {
             if (!currentUser) return;
             localStorage.setItem(getLogsKey(), JSON.stringify(logs));
         }
-
         function loadData() {
             if (!currentUser) return;
             trades = getTrades();
@@ -365,20 +528,16 @@
         // ---------- Helper Functions ----------
         function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
         function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
-
         function showMessage(message, type = 'danger', container = 'messageArea') {
             const msgDiv = document.getElementById(container);
             if (!msgDiv) return;
             msgDiv.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
             setTimeout(() => { const alert = msgDiv.querySelector('.alert'); if (alert) alert.remove(); }, 3000);
         }
-
         function generateId() { return Date.now() + Math.floor(Math.random() * 1000); }
-
         function addLog(action, tradeId, instrument, details) {
             if (!currentUser) return;
-            const log = { id: generateId(), timestamp: new Date().toISOString(), action, tradeId, instrument, details };
-            logs.push(log);
+            logs.push({ id: generateId(), timestamp: new Date().toISOString(), action, tradeId, instrument, details });
             saveLogs();
         }
 
@@ -386,21 +545,18 @@
         function renderChart() {
             const ctx = document.getElementById('performanceChart').getContext('2d');
             if (chartInstance) chartInstance.destroy();
-
             if (!trades.length) {
                 chartInstance = new Chart(ctx, {
                     type: 'line',
                     data: { labels: [], datasets: [] },
-                    options: { plugins: { title: { display: true, text: 'No trade data yet' } } }
+                    options: { plugins: { title: { display: true, text: 'No trades' } } }
                 });
                 return;
             }
-
             const sorted = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
             const labels = sorted.map(t => new Date(t.date).toLocaleDateString());
             let cumulative = 0;
             const data = sorted.map(t => { cumulative += t.profitLoss; return cumulative; });
-
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -408,8 +564,8 @@
                     datasets: [{
                         label: 'Cumulative P&L ($)',
                         data: data,
-                        borderColor: 'rgb(75, 192, 192)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
                         tension: 0.1,
                         fill: true
                     }]
@@ -418,67 +574,52 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: false } }
+                    scales: { y: { beginAtZero: false, grid: { color: '#1e2538' }, ticks: { color: '#8a8f9c' } },
+                             x: { ticks: { color: '#8a8f9c', maxRotation: 0, autoSkip: true } } }
                 }
             });
         }
 
         // ---------- Dashboard Rendering ----------
         function renderDashboard() {
-            renderStats();
-            renderTradesTable();
-            renderChart();
-        }
-
-        function renderStats() {
             const total = trades.length;
             const winning = trades.filter(t => t.profitLoss > 0).length;
             const losing = total - winning;
             const winRate = total ? ((winning / total) * 100).toFixed(1) : 0;
-
             document.getElementById('totalTrades').textContent = total;
             document.getElementById('winningTrades').textContent = winning;
             document.getElementById('losingTrades').textContent = losing;
             document.getElementById('winRate').textContent = winRate + '%';
-        }
 
-        function renderTradesTable() {
+            // Render trades table (simplified for mobile)
             const tbody = document.getElementById('tradesTableBody');
             if (!trades.length) {
-                tbody.innerHTML = '<tr><td colspan="10" class="text-center">No trades yet. Click "Add New Trade".</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center">No trades</td></tr>';
                 return;
             }
-
             const sorted = [...trades].sort((a,b) => new Date(b.date) - new Date(a.date));
             let html = '';
             sorted.forEach(trade => {
                 const pnlClass = trade.profitLoss > 0 ? 'profit' : 'loss';
-                html += `
-                    <tr>
-                        <td>${new Date(trade.date).toLocaleDateString()}</td>
-                        <td>${trade.instrument}</td>
-                        <td>${trade.direction}</td>
-                        <td>${trade.entryPrice}</td>
-                        <td>${trade.exitPrice}</td>
-                        <td>${trade.stopLoss || '-'}</td>
-                        <td>${trade.takeProfit || '-'}</td>
-                        <td class="${pnlClass}">$${trade.profitLoss.toFixed(2)}</td>
-                        <td>${trade.notes ? (trade.notes.length > 30 ? trade.notes.substring(0,30)+'...' : trade.notes) : ''}</td>
-                        <td>
-                            <button class="btn btn-sm btn-warning" onclick="editTrade('${trade.id}')">Edit</button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteTrade('${trade.id}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
+                html += `<tr>
+                    <td>${new Date(trade.date).toLocaleDateString()}</td>
+                    <td>${trade.instrument}</td>
+                    <td>${trade.direction}</td>
+                    <td class="${pnlClass}">$${trade.profitLoss.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning py-0 px-1" onclick="editTrade('${trade.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger py-0 px-1" onclick="deleteTrade('${trade.id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
             });
             tbody.innerHTML = html;
+            renderChart();
         }
 
         // ---------- Trade CRUD ----------
         window.editTrade = function(id) {
             const trade = trades.find(t => t.id == id);
             if (!trade) return;
-
             document.getElementById('tradeId').value = trade.id;
             document.getElementById('tradeDate').value = trade.date.split('T')[0];
             document.getElementById('tradeInstrument').value = trade.instrument;
@@ -489,29 +630,25 @@
             document.getElementById('tradeTakeProfit').value = trade.takeProfit || '';
             document.getElementById('tradeProfitLoss').value = trade.profitLoss;
             document.getElementById('tradeNotes').value = trade.notes || '';
-
             document.getElementById('tradeModalLabel').textContent = 'Edit Trade';
             new bootstrap.Modal(document.getElementById('tradeModal')).show();
         };
-
         window.deleteTrade = function(id) {
-            if (!confirm('Delete this trade?')) return;
+            if (!confirm('Delete?')) return;
             const trade = trades.find(t => t.id == id);
             if (trade) {
-                addLog('DELETE', id, trade.instrument, `Deleted ${trade.direction} ${trade.instrument}`);
+                addLog('DELETE', id, trade.instrument, `Deleted`);
                 trades = trades.filter(t => t.id != id);
                 saveTrades();
                 renderDashboard();
             }
         };
-
         document.getElementById('addTradeBtn').addEventListener('click', function() {
             document.getElementById('tradeForm').reset();
             document.getElementById('tradeId').value = '';
             document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
             document.getElementById('tradeModalLabel').textContent = 'Add New Trade';
         });
-
         document.getElementById('saveTradeBtn').addEventListener('click', function() {
             const id = document.getElementById('tradeId').value;
             const tradeData = {
@@ -525,22 +662,18 @@
                 profitLoss: parseFloat(document.getElementById('tradeProfitLoss').value),
                 notes: document.getElementById('tradeNotes').value
             };
-
             if (id) {
-                // Edit
                 const index = trades.findIndex(t => t.id == id);
                 if (index !== -1) {
                     tradeData.id = id;
                     trades[index] = tradeData;
-                    addLog('EDIT', id, tradeData.instrument, `Edited ${tradeData.direction} ${tradeData.instrument}`);
+                    addLog('EDIT', id, tradeData.instrument, `Edited`);
                 }
             } else {
-                // Add
                 tradeData.id = generateId();
                 trades.push(tradeData);
-                addLog('ADD', tradeData.id, tradeData.instrument, `Added ${tradeData.direction} ${tradeData.instrument} @ ${tradeData.entryPrice}`);
+                addLog('ADD', tradeData.id, tradeData.instrument, `Added`);
             }
-
             saveTrades();
             renderDashboard();
             bootstrap.Modal.getInstance(document.getElementById('tradeModal')).hide();
@@ -552,60 +685,37 @@
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
             const password = document.getElementById('signupPassword').value;
-
-            if (!name || !email || !password) {
-                showMessage('All fields are required.', 'warning');
-                return;
-            }
-
+            if (!name || !email || !password) { showMessage('All fields required.', 'warning'); return; }
             const users = getUsers();
-            if (users.find(u => u.email === email)) {
-                showMessage('User already exists. Please login.', 'danger');
-                return;
-            }
-
-            const newUser = { id: generateId(), name, email, password };
-            users.push(newUser);
+            if (users.find(u => u.email === email)) { showMessage('User exists.', 'danger'); return; }
+            users.push({ id: generateId(), name, email, password });
             saveUsers(users);
-
             document.getElementById('loginEmail').value = email;
             document.getElementById('loginPassword').value = '';
-            const loginTab = new bootstrap.Tab(document.getElementById('login-tab'));
-            loginTab.show();
+            new bootstrap.Tab(document.getElementById('login-tab')).show();
             showMessage('Signup successful! Please login.', 'success');
             e.target.reset();
         });
-
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-
             const users = getUsers();
             const user = users.find(u => u.email === email && u.password === password);
-            if (!user) {
-                showMessage('Invalid email or password.', 'danger');
-                return;
-            }
-
+            if (!user) { showMessage('Invalid credentials.', 'danger'); return; }
             currentUser = { id: user.id, name: user.name, email: user.email };
             localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
-
-            loadData(); // load this user's trades/logs (will be empty for new users)
-
+            loadData();
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('dashboardContainer').style.display = 'block';
-            document.getElementById('welcomeUser').textContent = `Welcome, ${user.name}!`;
-
+            document.getElementById('welcomeUser') ? document.getElementById('welcomeUser').textContent = `Hi, ${user.name}` : null;
             renderDashboard();
         });
-
-        document.getElementById('logoutBtn').addEventListener('click', function() {
+        document.getElementById('logoutBtn')?.addEventListener('click', function() {
             localStorage.removeItem(CURRENT_USER_KEY);
             currentUser = null;
             document.getElementById('dashboardContainer').style.display = 'none';
             document.getElementById('loginContainer').style.display = 'flex';
-            document.getElementById('loginForm').reset();
         });
 
         // ---------- Dev mode ----------
@@ -616,32 +726,26 @@
         }
         window.viewStoredUsers = function() {
             const users = getUsers();
-            if (!users.length) { showMessage('No users stored.', 'info'); return; }
-            let list = users.map(u => `ID: ${u.id}, Name: ${u.name}, Email: ${u.email}`).join('\n');
-            alert('Stored Users:\n' + list);
-            console.table(users);
+            if (!users.length) { showMessage('No users.', 'info'); return; }
+            alert(users.map(u => `ID: ${u.id}, Name: ${u.name}, Email: ${u.email}`).join('\n'));
         };
 
         // ---------- Initialize ----------
         (function init() {
             enableDevMode();
-
             const savedUser = localStorage.getItem(CURRENT_USER_KEY);
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 loadData();
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('dashboardContainer').style.display = 'block';
-                document.getElementById('welcomeUser').textContent = `Welcome, ${currentUser.name}!`;
                 renderDashboard();
             }
-
-            // Create a demo user only if no users exist (optional)
             const users = getUsers();
             if (!users.length) {
                 users.push({ id: 1, name: 'Demo User', email: 'demo@example.com', password: 'password123' });
                 saveUsers(users);
-                console.log('Demo user created. Email: demo@example.com, Password: password123');
+                console.log('Demo user created.');
             }
         })();
     </script>
