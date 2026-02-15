@@ -1,69 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DUMP PABLO</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <title>Good Morning Fatima Sada!</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin: 0;
+      color: #ffe600;
+    }
+
+    p {
+      font-size: 1.5em;
+      margin-top: 10px;
+      color: #ffffff;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .heart {
+      color: #ff385c;
+      animation: beat 1s infinite;
+    }
+
+    @keyframes beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-
-<header>
-  <h1>FUCK YOU PABLO</h1>
-  <button id="themeToggle">Toggle Theme</button>
-</header>
-
-<section class="summary">
   <div class="card">
-    <h3>Balance</h3>
-    <p id="balance">$0</p>
+    <h1>Good Morning, Fatima Sada! <span class="heart">❤️</span></h1>
+    <p>Wishing you a day full of smiles, laughter, and amazing moments!</p>
   </div>
-  <div class="card">
-    <h3>Win Rate</h3>
-    <p id="winRate">0%</p>
-  </div>
-  <div class="card">
-    <h3>Total Trades</h3>
-    <p id="totalTrades">0</p>
-  </div>
-</section>
 
-<section class="chart-section">
-  <canvas id="equityChart"></canvas>
-</section>
-
-<section class="form-section">
-  <h2>Add Trade</h2>
-  <form id="tradeForm">
-    <input type="text" id="pair" placeholder="Pair" required>
-    <input type="number" id="lot" placeholder="Lot Size" required>
-    <input type="number" id="risk" placeholder="Risk %" required>
-    <input type="number" id="pl" placeholder="Profit / Loss ($)" required>
-    <button type="submit">Add Trade</button>
-  </form>
-</section>
-
-<section class="history">
-  <h2>History</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Pair</th>
-        <th>Lot</th>
-        <th>Risk%</th>
-        <th>P/L</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody id="tradeTable"></tbody>
-  </table>
-</section>
-
-</div>
-
-<script src="script.js"></script>
 </body>
 </html>
