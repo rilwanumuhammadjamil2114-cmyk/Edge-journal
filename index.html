@@ -13,22 +13,114 @@
     <style>
         * {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        .login-container {
-            min-height: 100vh;
+        
+        /* Splash Screen Styles */
+        .splash-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            z-index: 9999;
+            transition: opacity 1s ease-in-out;
         }
+        
+        .splash-content {
+            text-align: center;
+            animation: fadeInUp 1.5s ease-out;
+        }
+        
+        .splash-icon {
+            font-size: 120px;
+            color: white;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+        
+        .splash-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: fadeIn 2s ease-out;
+        }
+        
+        .splash-subtitle {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+            margin-top: 10px;
+            font-weight: 400;
+            animation: fadeIn 2.5s ease-out;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Login Container (initially hidden) */
+        .login-container {
+            min-height: 100vh;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        
+        .login-container.visible {
+            opacity: 1;
+        }
+        
         .login-header {
             text-align: center;
             margin-bottom: 30px;
         }
+        
         .login-header h1 {
             font-size: 42px;
             font-weight: 800;
@@ -36,11 +128,13 @@
             text-shadow: 0 4px 10px rgba(0,0,0,0.2);
             letter-spacing: -0.5px;
         }
+        
         .login-header p {
             color: rgba(255,255,255,0.9);
             font-size: 16px;
             font-weight: 400;
         }
+        
         .login-card {
             background: rgba(255,255,255,0.95);
             border-radius: 24px;
@@ -50,16 +144,19 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             backdrop-filter: blur(10px);
         }
+        
         .nav-tabs .nav-link {
             color: #495057;
             border: none;
             font-weight: 500;
         }
+        
         .nav-tabs .nav-link.active {
             color: #667eea;
             background: transparent;
             border-bottom: 3px solid #667eea;
         }
+        
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -68,10 +165,12 @@
             font-weight: 600;
             transition: transform 0.2s;
         }
+        
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102,126,234,0.3);
         }
+        
         .dashboard-container {
             display: none;
             max-width: 900px;
@@ -81,16 +180,19 @@
             padding: 24px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
+        
         .navbar-brand {
             font-size: 24px;
             font-weight: 700;
             color: white !important;
         }
+        
         .stats-row {
             display: flex;
             gap: 16px;
             margin-bottom: 16px;
         }
+        
         .stats-row .stat-card {
             flex: 1;
             background: #1e2538 !important;
@@ -100,21 +202,25 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             transition: transform 0.2s;
         }
+        
         .stats-row .stat-card:hover {
             transform: translateY(-4px);
         }
+        
         .stat-card h5 {
             font-size: 15px;
             color: #8a8f9c;
             margin-bottom: 8px;
             font-weight: 500;
         }
+        
         .stat-card .display-6 {
             font-size: 28px;
             font-weight: 700;
             color: white;
             margin: 0;
         }
+        
         .add-trade-btn {
             background: #2f3a5c;
             border: none;
@@ -127,9 +233,11 @@
             align-items: center;
             gap: 8px;
         }
+        
         .add-trade-btn:hover {
             background: #3d4a70;
         }
+        
         .table {
             color: #b0b7c4;
             background: #131a2c;
@@ -137,6 +245,7 @@
             overflow: hidden;
             font-size: 14px;
         }
+        
         .table thead th {
             background: #1e2538;
             color: #8a8f9c;
@@ -144,12 +253,15 @@
             border: none;
             padding: 14px 12px;
         }
+        
         .table tbody td {
             border-color: #1e2538;
             padding: 12px;
         }
+        
         .profit { color: #4caf50; font-weight: 600; }
         .loss { color: #f44336; font-weight: 600; }
+        
         .action-btn {
             background: transparent;
             border: none;
@@ -157,13 +269,16 @@
             font-size: 16px;
             margin: 0 4px;
         }
+        
         .action-btn.edit:hover { color: #ffc107; }
         .action-btn.delete:hover { color: #f44336; }
+        
         .modal-content {
             background: #1e2538;
             color: white;
             border-radius: 28px;
         }
+        
         .form-control, .form-select {
             background: #0f1422;
             border: 1px solid #2f3a5c;
@@ -171,16 +286,29 @@
             border-radius: 16px;
             padding: 12px;
         }
+        
         .form-control:focus {
             border-color: #667eea;
             box-shadow: none;
         }
+        
         .btn-close { filter: invert(1); }
         .dev-only { display: none; }
         body.dev-mode .dev-only { display: block; }
     </style>
 </head>
 <body>
+    <!-- Splash Screen with Animated Logo -->
+    <div class="splash-container" id="splashScreen">
+        <div class="splash-content">
+            <div class="splash-icon">
+                <i class="fas fa-book-open"></i>
+            </div>
+            <div class="splash-title">Edge Journal</div>
+            <div class="splash-subtitle">Your Trading Companion</div>
+        </div>
+    </div>
+
     <!-- Login Container -->
     <div class="login-container" id="loginContainer">
         <div style="width: 100%; max-width: 420px;">
@@ -354,9 +482,31 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ---------- localStorage Keys (permanent) ----------
+        // ---------- Splash Screen ----------
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show splash screen for 2.5 seconds, then fade out and show login
+            setTimeout(function() {
+                const splash = document.getElementById('splashScreen');
+                const loginContainer = document.getElementById('loginContainer');
+                
+                // Fade out splash
+                splash.style.opacity = '0';
+                
+                // After fade out, hide splash and show login
+                setTimeout(function() {
+                    splash.style.display = 'none';
+                    loginContainer.style.display = 'flex';
+                    // Small delay for display to take effect, then fade in
+                    setTimeout(function() {
+                        loginContainer.classList.add('visible');
+                    }, 50);
+                }, 1000); // Match transition duration
+            }, 2500); // Show splash for 2.5 seconds
+        });
+
+        // ---------- localStorage Keys ----------
         const USERS_KEY = 'edge_journal_users';
-        const TRADES_PREFIX = 'edge_trades_';  // will be followed by userId
+        const TRADES_PREFIX = 'edge_trades_';
         const CURRENT_USER_KEY = 'edge_current_user';
 
         // ---------- Global variables ----------
@@ -573,6 +723,7 @@
             currentUser = null;
             document.getElementById('dashboardContainer').style.display = 'none';
             document.getElementById('loginContainer').style.display = 'flex';
+            loginContainer.classList.add('visible');
         });
 
         // ---------- Dev mode: access to ALL stored data ----------
@@ -608,8 +759,14 @@
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 loadData();
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('dashboardContainer').style.display = 'block';
+                // If user is already logged in, hide splash immediately and show dashboard
+                const splash = document.getElementById('splashScreen');
+                const loginContainer = document.getElementById('loginContainer');
+                const dashboardContainer = document.getElementById('dashboardContainer');
+                
+                splash.style.display = 'none';
+                loginContainer.style.display = 'none';
+                dashboardContainer.style.display = 'block';
                 renderDashboard();
             }
 
