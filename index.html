@@ -76,6 +76,23 @@
             max-height: 300px;
             width: 100%;
         }
+        /* Flexbox stats container */
+        .stats-flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+        .stats-flex-container .stat-card {
+            flex: 1 1 200px;
+            min-width: 180px;
+            margin-bottom: 0;
+        }
+        @media (max-width: 768px) {
+            .stats-flex-container .stat-card {
+                flex: 1 1 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -152,38 +169,30 @@
         </nav>
 
         <div class="container mt-4">
-            <!-- Stats Cards -->
-            <div class="row mb-4" id="statsCards">
-                <div class="col-md-3">
-                    <div class="card stat-card bg-primary text-white">
-                        <div class="card-body">
-                            <h5>Total Trades</h5>
-                            <p class="display-6" id="totalTrades">0</p>
-                        </div>
+            <!-- Stats Cards (Flexbox) -->
+            <div class="stats-flex-container mb-4">
+                <div class="stat-card bg-primary text-white">
+                    <div class="card-body">
+                        <h5>Total Trades</h5>
+                        <p class="display-6" id="totalTrades">0</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card stat-card bg-success text-white">
-                        <div class="card-body">
-                            <h5>Winning Trades</h5>
-                            <p class="display-6" id="winningTrades">0</p>
-                        </div>
+                <div class="stat-card bg-success text-white">
+                    <div class="card-body">
+                        <h5>Winning Trades</h5>
+                        <p class="display-6" id="winningTrades">0</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card stat-card bg-danger text-white">
-                        <div class="card-body">
-                            <h5>Losing Trades</h5>
-                            <p class="display-6" id="losingTrades">0</p>
-                        </div>
+                <div class="stat-card bg-danger text-white">
+                    <div class="card-body">
+                        <h5>Losing Trades</h5>
+                        <p class="display-6" id="losingTrades">0</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="card stat-card bg-warning text-white">
-                        <div class="card-body">
-                            <h5>Win Rate</h5>
-                            <p class="display-6" id="winRate">0%</p>
-                        </div>
+                <div class="stat-card bg-warning text-white">
+                    <div class="card-body">
+                        <h5>Win Rate</h5>
+                        <p class="display-6" id="winRate">0%</p>
                     </div>
                 </div>
             </div>
