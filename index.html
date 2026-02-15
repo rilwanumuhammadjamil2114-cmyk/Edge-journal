@@ -64,15 +64,22 @@
         .alert {
             border-radius: 10px;
         }
-        .view-users-link {
+        .dev-link {
             color: #6c757d;
             text-decoration: none;
             font-size: 0.9rem;
             cursor: pointer;
         }
-        .view-users-link:hover {
+        .dev-link:hover {
             color: #667eea;
             text-decoration: underline;
+        }
+        /* Hidden by default, shown only when dev mode is active */
+        .dev-only {
+            display: none;
+        }
+        body.dev-mode .dev-only {
+            display: block;
         }
     </style>
 </head>
@@ -110,8 +117,9 @@
                                         <input type="password" class="form-control" id="loginPassword" required>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-                                    <div class="text-center">
-                                        <a href="#" class="view-users-link" onclick="viewStoredUsers()">🔍 View stored users</a>
+                                    <!-- Dev-only link: visible only with ?dev=true -->
+                                    <div class="text-center dev-only">
+                                        <a href="#" class="dev-link" onclick="viewStoredUsers()">🔍 View stored users (dev only)</a>
                                     </div>
                                 </form>
                             </div>
@@ -151,6 +159,15 @@
         // ---------- localStorage Keys ----------
         const USERS_KEY = 'trading_journal_users';
         const CURRENT_USER_KEY = 'trading_journal_current_user';
+
+        // ---------- Check for dev mode (URL parameter ?dev=true) ----------
+        function enableDevMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('dev') && urlParams.get('dev') === 'true') {
+                document.body.classList.add('dev-mode');
+                console.log('Dev mode enabled – stored users link visible.');
+            }
+        }
 
         // ---------- Helper Functions ----------
         function getUsers() {
@@ -253,11 +270,11 @@
             let userList = users.map(u => `ID: ${u.id}, Name: ${u.name}, Email: ${u.email}`).join('\n');
             alert('Stored Users:\n' + userList);
 
-            // Alternatively, you could log to console
+            // Also log to console
             console.table(users);
         }
 
-        // Expose the function globally
+        // Expose the function globally (so it can be called from console even without the link)
         window.viewStoredUsers = viewStoredUsers;
 
         // Optional: Pre-populate with demo user if no users exist
@@ -274,6 +291,9 @@
                 console.log('Demo user created. Email: demo@example.com, Password: password123');
             }
         })();
+
+        // Activate dev mode if URL parameter present
+        enableDevMode();
     </script>
 </body>
 </html>
