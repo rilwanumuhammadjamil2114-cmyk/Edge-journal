@@ -297,28 +297,51 @@
     <script>
         // ---------- localStorage Keys ----------
         const USERS_KEY = 'trading_journal_users';
-        const TRADES_KEY = 'trading_journal_trades';
-        const LOGS_KEY = 'trading_journal_logs';
         const CURRENT_USER_KEY = 'trading_journal_current_user';
 
         // ---------- Global variables ----------
         let trades = [];
-        let logs = [];  // kept for internal use (optional)
+        let logs = [];
         let currentUser = null;
         let chartInstance = null;
+
+        // ---------- User‑specific storage keys ----------
+        function getTradesKey() {
+            return currentUser ? `trades_user_${currentUser.id}` : null;
+        }
+        function getLogsKey() {
+            return currentUser ? `logs_user_${currentUser.id}` : null;
+        }
+
+        // ---------- Data access (scoped to current user) ----------
+        function getTrades() {
+            if (!currentUser) return [];
+            const key = getTradesKey();
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+        function saveTrades() {
+            if (!currentUser) return;
+            localStorage.setItem(getTradesKey(), JSON.stringify(trades));
+        }
+        function getLogs() {
+            if (!currentUser) return [];
+            const key = getLogsKey();
+            return JSON.parse(localStorage.getItem(key) || '[]');
+        }
+        function saveLogs() {
+            if (!currentUser) return;
+            localStorage.setItem(getLogsKey(), JSON.stringify(logs));
+        }
+
+        function loadData() {
+            if (!currentUser) return;
+            trades = getTrades();
+            logs = getLogs();
+        }
 
         // ---------- Helper Functions ----------
         function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
         function saveUsers(users) { localStorage.setItem(USERS_KEY, JSON.stringify(users)); }
-        function getTrades() { return JSON.parse(localStorage.getItem(TRADES_KEY) || '[]'); }
-        function saveTrades() { localStorage.setItem(TRADES_KEY, JSON.stringify(trades)); }
-        function getLogs() { return JSON.parse(localStorage.getItem(LOGS_KEY) || '[]'); }
-        function saveLogs() { localStorage.setItem(LOGS_KEY, JSON.stringify(logs)); }
-
-        function loadData() {
-            trades = getTrades();
-            logs = getLogs();
-        }
 
         function showMessage(message, type = 'danger', container = 'messageArea') {
             const msgDiv = document.getElementById(container);
@@ -330,6 +353,7 @@
         function generateId() { return Date.now() + Math.floor(Math.random() * 1000); }
 
         function addLog(action, tradeId, instrument, details) {
+            if (!currentUser) return;
             const log = { id: generateId(), timestamp: new Date().toISOString(), action, tradeId, instrument, details };
             logs.push(log);
             saveLogs();
@@ -341,7 +365,6 @@
             if (chartInstance) chartInstance.destroy();
 
             if (!trades.length) {
-                // No data: show empty chart with message
                 chartInstance = new Chart(ctx, {
                     type: 'line',
                     data: { labels: [], datasets: [] },
@@ -350,7 +373,6 @@
                 return;
             }
 
-            // Sort trades by date
             const sorted = [...trades].sort((a, b) => new Date(a.date) - new Date(b.date));
             const labels = sorted.map(t => new Date(t.date).toLocaleDateString());
             let cumulative = 0;
@@ -372,13 +394,8 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { mode: 'index', intersect: false }
-                    },
-                    scales: {
-                        y: { beginAtZero: false }
-                    }
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: false } }
                 }
             });
         }
@@ -551,11 +568,12 @@
             currentUser = { id: user.id, name: user.name, email: user.email };
             localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
 
+            loadData(); // load this user's trades/logs (will be empty for new users)
+
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('dashboardContainer').style.display = 'block';
             document.getElementById('welcomeUser').textContent = `Welcome, ${user.name}!`;
 
-            loadData();
             renderDashboard();
         });
 
@@ -588,31 +606,19 @@
             const savedUser = localStorage.getItem(CURRENT_USER_KEY);
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
+                loadData();
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('dashboardContainer').style.display = 'block';
                 document.getElementById('welcomeUser').textContent = `Welcome, ${currentUser.name}!`;
-                loadData();
                 renderDashboard();
             }
 
-            // Create demo user if none
+            // Create a demo user only if no users exist (optional)
             const users = getUsers();
             if (!users.length) {
                 users.push({ id: 1, name: 'Demo User', email: 'demo@example.com', password: 'password123' });
                 saveUsers(users);
                 console.log('Demo user created. Email: demo@example.com, Password: password123');
-            }
-
-            // Create dummy trades and logs if none exist
-            if (!getTrades().length) {
-                const dummyTrades = [
-                    { id: generateId(), date: '2025-02-01', instrument: 'AAPL', direction: 'LONG', entryPrice: 150.25, exitPrice: 152.30, stopLoss: 148.00, takeProfit: 155.00, profitLoss: 205, notes: 'Nice move' },
-                    { id: generateId(), date: '2025-02-05', instrument: 'TSLA', direction: 'SHORT', entryPrice: 200.00, exitPrice: 195.50, profitLoss: 450, notes: '' },
-                    { id: generateId(), date: '2025-02-10', instrument: 'MSFT', direction: 'LONG', entryPrice: 380.00, exitPrice: 375.00, stopLoss: 378.00, profitLoss: -500, notes: 'Stopped out' },
-                    { id: generateId(), date: '2025-02-15', instrument: 'AMZN', direction: 'LONG', entryPrice: 130.00, exitPrice: 135.00, profitLoss: 500, notes: 'Earnings play' }
-                ];
-                localStorage.setItem(TRADES_KEY, JSON.stringify(dummyTrades));
-                loadData(); // reload
             }
         })();
     </script>
