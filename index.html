@@ -3,204 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Journal - Logs</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>Trading Journal - Login</title>
+    <!-- Bootstrap 5 for styling -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .badge-add { background-color: #28a745; color: white; }
-        .badge-edit { background-color: #ffc107; color: black; }
-        .badge-delete { background-color: #dc3545; color: white; }
-        .container { max-width: 1200px; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .card-header {
+            background: transparent;
+            border-bottom: none;
+            text-align: center;
+            padding-top: 20px;
+        }
+        .card-header h3 {
+            color: #333;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link {
+            color: #495057;
+            border: none;
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link.active {
+            color: #667eea;
+            background: transparent;
+            border-bottom: 3px solid #667eea;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 25px;
+            padding: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #667eea;
+        }
+        .alert {
+            border-radius: 10px;
+        }
+        .view-users-link {
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .view-users-link:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container">
-            <span class="navbar-brand mb-0 h1">📒 Trading Journal - Activity Logs</span>
-        </div>
-    </nav>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📒 Trading Journal</h3>
+                        <p class="text-muted">Access your trading journal</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs justify-content-center mb-4" id="authTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Login</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab">Sign Up</button>
+                            </li>
+                        </ul>
 
-    <div class="container mt-4">
-        <div class="row mb-3">
-            <div class="col">
-                <h2>Activity Log</h2>
-            </div>
-            <div class="col text-end">
-                <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#addLogForm">+ Add Sample Log</button>
-                <button class="btn btn-danger" id="clearLogsBtn">Clear All Logs</button>
-            </div>
-        </div>
+                        <!-- Tab panes -->
+                        <div class="tab-content" id="authTabsContent">
+                            <!-- Login Form -->
+                            <div class="tab-pane fade show active" id="login" role="tabpanel">
+                                <form id="loginForm">
+                                    <div class="mb-3">
+                                        <label for="loginEmail" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="loginEmail" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="loginPassword" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="loginPassword" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                                    <div class="text-center">
+                                        <a href="#" class="view-users-link" onclick="viewStoredUsers()">🔍 View stored users</a>
+                                    </div>
+                                </form>
+                            </div>
 
-        <!-- Add Log Form (collapsible) -->
-        <div class="collapse card card-body mb-4" id="addLogForm">
-            <h5>Add New Log Entry</h5>
-            <form id="logForm">
-                <div class="row">
-                    <div class="col-md-3 mb-2">
-                        <select class="form-select" id="action" required>
-                            <option value="ADD">ADD</option>
-                            <option value="EDIT">EDIT</option>
-                            <option value="DELETE">DELETE</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <input type="number" class="form-control" id="tradeId" placeholder="Trade ID (optional)">
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <input type="text" class="form-control" id="instrument" placeholder="Instrument (optional)">
-                    </div>
-                    <div class="col-md-3 mb-2">
-                        <input type="text" class="form-control" id="details" placeholder="Details (e.g., Added AAPL LONG)">
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <button type="submit" class="btn btn-success w-100">Add Log</button>
+                            <!-- Signup Form -->
+                            <div class="tab-pane fade" id="signup" role="tabpanel">
+                                <form id="signupForm">
+                                    <div class="mb-3">
+                                        <label for="signupName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="signupName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signupEmail" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="signupEmail" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signupPassword" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="signupPassword" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 mb-3">Sign Up</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Alert message area -->
+                        <div id="messageArea"></div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-
-        <!-- Logs Table -->
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Timestamp</th>
-                    <th>Action</th>
-                    <th>Trade ID</th>
-                    <th>Instrument</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-            <tbody id="logTableBody">
-                <!-- Populated by JavaScript -->
-            </tbody>
-        </table>
     </div>
 
-    <!-- Bootstrap JS (for collapse functionality) -->
+    <!-- Bootstrap JS (for tabs) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Storage key
-        const STORAGE_KEY = 'trading_journal_logs';
+        // ---------- localStorage Keys ----------
+        const USERS_KEY = 'trading_journal_users';
+        const CURRENT_USER_KEY = 'trading_journal_current_user';
 
-        // Load logs from localStorage or initialize with dummy data
-        let logs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-        // If no logs exist, add some dummy entries for demonstration
-        if (logs.length === 0) {
-            logs = [
-                {
-                    id: Date.now() - 100000,
-                    timestamp: new Date(Date.now() - 86400000).toISOString(), // yesterday
-                    action: 'ADD',
-                    tradeId: 101,
-                    instrument: 'AAPL',
-                    details: 'Added LONG AAPL @ 150.25'
-                },
-                {
-                    id: Date.now() - 50000,
-                    timestamp: new Date().toISOString(),
-                    action: 'EDIT',
-                    tradeId: 101,
-                    instrument: 'AAPL',
-                    details: 'Edited exit price to 152.30'
-                },
-                {
-                    id: Date.now(),
-                    timestamp: new Date().toISOString(),
-                    action: 'DELETE',
-                    tradeId: 102,
-                    instrument: 'TSLA',
-                    details: 'Deleted SHORT TSLA'
-                }
-            ];
-            saveLogs();
+        // ---------- Helper Functions ----------
+        function getUsers() {
+            const users = localStorage.getItem(USERS_KEY);
+            return users ? JSON.parse(users) : [];
         }
 
-        // Save logs to localStorage
-        function saveLogs() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
+        function saveUsers(users) {
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
         }
 
-        // Generate a simple unique ID
-        function generateId() {
-            return Date.now() + Math.floor(Math.random() * 1000);
+        function showMessage(message, type = 'danger') {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+            // Auto-dismiss after 3 seconds
+            setTimeout(() => {
+                const alert = messageArea.querySelector('.alert');
+                if (alert) alert.remove();
+            }, 3000);
         }
 
-        // Format timestamp for display
-        function formatTimestamp(isoString) {
-            const date = new Date(isoString);
-            return date.toLocaleString(); // uses browser's locale
-        }
+        // ---------- Signup ----------
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
 
-        // Render the logs table
-        function renderLogs() {
-            const tbody = document.getElementById('logTableBody');
-            if (logs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center">No logs yet. Add one using the form above.</td></tr>`;
+            if (!name || !email || !password) {
+                showMessage('All fields are required.', 'warning');
                 return;
             }
 
-            // Sort logs by timestamp descending (newest first)
-            const sorted = [...logs].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            const users = getUsers();
+            // Check if user already exists
+            if (users.find(u => u.email === email)) {
+                showMessage('User with this email already exists. Please login.', 'danger');
+                return;
+            }
 
-            let html = '';
-            sorted.forEach(log => {
-                const badgeClass = log.action === 'ADD' ? 'badge-add' : (log.action === 'EDIT' ? 'badge-edit' : 'badge-delete');
-                html += `
-                    <tr>
-                        <td>${formatTimestamp(log.timestamp)}</td>
-                        <td><span class="badge ${badgeClass}">${log.action}</span></td>
-                        <td>${log.tradeId || '-'}</td>
-                        <td>${log.instrument || '-'}</td>
-                        <td>${log.details || ''}</td>
-                    </tr>
-                `;
-            });
-            tbody.innerHTML = html;
-        }
-
-        // Handle form submission to add a new log
-        document.getElementById('logForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const action = document.getElementById('action').value;
-            const tradeId = document.getElementById('tradeId').value ? parseInt(document.getElementById('tradeId').value) : null;
-            const instrument = document.getElementById('instrument').value || null;
-            const details = document.getElementById('details').value || null;
-
-            const newLog = {
-                id: generateId(),
-                timestamp: new Date().toISOString(),
-                action: action,
-                tradeId: tradeId,
-                instrument: instrument,
-                details: details
+            // Add new user (in real app, hash password; here plain for demo)
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password // never store plain text in real app!
             };
+            users.push(newUser);
+            saveUsers(users);
 
-            logs.push(newLog);
-            saveLogs();
-            renderLogs();
+            // Auto-fill login form and switch tab
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = '';
 
-            // Reset form and collapse it
-            document.getElementById('logForm').reset();
-            // Optionally collapse the form (using Bootstrap's Collapse API)
-            const collapseEl = document.getElementById('addLogForm');
-            const bsCollapse = new bootstrap.Collapse(collapseEl, { toggle: false });
-            bsCollapse.hide();
+            // Switch to login tab via Bootstrap
+            const loginTab = new bootstrap.Tab(document.getElementById('login-tab'));
+            loginTab.show();
+
+            showMessage('Signup successful! Please login.', 'success');
+            e.target.reset();
         });
 
-        // Clear all logs
-        document.getElementById('clearLogsBtn').addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete all logs?')) {
-                logs = [];
-                saveLogs();
-                renderLogs();
+        // ---------- Login ----------
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Store current user session (just email/name for simplicity)
+                localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                }));
+                showMessage(`Login successful! Welcome back, ${user.name}.`, 'success');
+                // Here you can redirect to the main app, e.g.:
+                // window.location.href = 'dashboard.html';
+                // For demo, we'll just display a success message.
+            } else {
+                showMessage('Invalid email or password.', 'danger');
             }
         });
 
-        // Initial render
-        renderLogs();
+        // ---------- View Stored Users (for debugging/access) ----------
+        function viewStoredUsers() {
+            const users = getUsers();
+            if (users.length === 0) {
+                showMessage('No users stored yet.', 'info');
+                return;
+            }
+
+            // Format user list as a simple string
+            let userList = users.map(u => `ID: ${u.id}, Name: ${u.name}, Email: ${u.email}`).join('\n');
+            alert('Stored Users:\n' + userList);
+
+            // Alternatively, you could log to console
+            console.table(users);
+        }
+
+        // Expose the function globally
+        window.viewStoredUsers = viewStoredUsers;
+
+        // Optional: Pre-populate with demo user if no users exist
+        (function initDemoUser() {
+            const users = getUsers();
+            if (users.length === 0) {
+                users.push({
+                    id: 1,
+                    name: 'Demo User',
+                    email: 'demo@example.com',
+                    password: 'password123'
+                });
+                saveUsers(users);
+                console.log('Demo user created. Email: demo@example.com, Password: password123');
+            }
+        })();
     </script>
 </body>
 </html>
