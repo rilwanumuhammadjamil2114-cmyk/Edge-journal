@@ -1,8 +1,0 @@
-/* Custom styles */
-.profit { color: green; font-weight: bold; }
-.loss { color: red; font-weight: bold; }
-.badge-add { background-color: #28a745; color: white; }
-.badge-edit { background-color: #ffc107; color: black; }
-.badge-delete { background-color: #dc3545; color: white; }
-.table th { background-color: #f8f9fa; }
-.card-stat { text-align: center; }
