@@ -3,874 +3,1277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edge Journal</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Font: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <title>ShopVibe - Your Ultimate Shopping Destination</title>
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success: #10b981;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 10px -4px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
             min-height: 100vh;
-            overflow-x: hidden;
         }
-        
-        /* Splash Screen Styles */
-        .splash-container {
-            position: fixed;
+
+        /* ========== NAVIGATION ========== */
+        .navbar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .navbar.scrolled {
+            box-shadow: var(--shadow-lg);
+        }
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            cursor: pointer;
+        }
+        .nav-brand .icon {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
-            transition: opacity 1s ease-in-out;
+            color: #fff;
+            font-size: 1.2rem;
         }
-        
-        .splash-content {
-            text-align: center;
-            animation: fadeInUp 1.5s ease-out;
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 8px;
+            align-items: center;
         }
-        
-        .splash-icon {
-            font-size: 120px;
-            color: white;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 24px;
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.95rem;
         }
-        
-        .splash-title {
-            font-size: 48px;
-            font-weight: 800;
-            color: white;
-            letter-spacing: -0.5px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            animation: fadeIn 2s ease-out;
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #f1f5f9;
+            color: var(--primary);
         }
-        
-        .splash-subtitle {
-            font-size: 18px;
-            color: rgba(255,255,255,0.9);
-            margin-top: 10px;
-            font-weight: 400;
-            animation: fadeIn 2.5s ease-out;
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        
-        /* Loading Screen (after login) */
-        .loading-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: none;
+        .btn-icon {
+            position: relative;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9998;
-            transition: opacity 0.5s ease-in-out;
+            color: var(--text);
         }
-        
-        .loading-content {
+        .btn-icon:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+        .cart-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            0% {
+                transform: scale(0);
+            }
+            60% {
+                transform: scale(1.3);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 40%, #a855f7 100%);
+            color: #fff;
+            padding: 60px 24px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            animation: float 12s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+            33% {
+                transform: translate(30px, -20px);
+            }
+            66% {
+                transform: translate(-20px, 20px);
+            }
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 32px;
+        }
+        .hero .btn-cta {
+            display: inline-block;
+            background: #fff;
+            color: var(--primary);
+            padding: 14px 36px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+            border: none;
+        }
+        .hero .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            margin-top: 48px;
+            flex-wrap: wrap;
+        }
+        .hero-stat {
             text-align: center;
         }
-        
-        .loading-icon {
-            font-size: 100px;
-            color: white;
-            margin-bottom: 20px;
-            animation: spinBook 1.5s infinite linear;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        .hero-stat .num {
+            font-size: 2rem;
+            font-weight: 800;
         }
-        
-        .loading-title {
-            font-size: 32px;
+        .hero-stat .label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+        .main-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .section-title {
+            font-size: 1.6rem;
             font-weight: 700;
-            color: white;
+            margin-bottom: 8px;
             letter-spacing: -0.5px;
-            margin-bottom: 15px;
-            animation: pulse 2s infinite;
         }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid white;
+        .section-subtitle {
+            color: var(--text-light);
+            margin-bottom: 28px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .filter-tag {
+            padding: 8px 18px;
+            border-radius: 24px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .filter-tag:hover,
+        .filter-tag.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* ========== PRODUCT GRID ========== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 24px;
+        }
+        .product-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid var(--border);
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
+        }
+        .product-card .img-wrapper {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            background: #f1f5f9;
+        }
+        .product-card .img-wrapper .placeholder-img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #cbd5e1;
+            transition: var(--transition);
+        }
+        .product-card:hover .placeholder-img {
+            transform: scale(1.08);
+            color: #94a3b8;
+        }
+        .product-card .badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 700;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        .product-card .badge.sale {
+            background: var(--danger);
+            color: #fff;
+        }
+        .product-card .wishlist-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            margin: 20px auto 0;
-            animation: spin 1s infinite linear;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            font-size: 1rem;
+            z-index: 2;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
         }
-        
-        /* Animations */
+        .product-card .wishlist-btn:hover {
+            background: #fff;
+            transform: scale(1.15);
+        }
+        .product-card .wishlist-btn.liked {
+            color: var(--danger);
+        }
+        .product-info {
+            padding: 16px 18px 20px;
+        }
+        .product-info .category {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .product-info h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .product-info .rating {
+            color: var(--accent);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        .product-info .rating span {
+            color: var(--text-light);
+            margin-left: 4px;
+        }
+        .product-info .price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .product-info .price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .product-info .price-old {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+        .btn-add-cart {
+            width: 100%;
+            padding: 10px;
+            border-radius: 24px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-add-cart:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+        }
+        .btn-add-cart.added {
+            background: var(--success);
+            animation: pulse 0.4s ease;
+        }
         @keyframes pulse {
-            0% {
+            0%,
+            100% {
                 transform: scale(1);
             }
             50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
+                transform: scale(1.04);
             }
         }
-        
-        @keyframes spinBook {
-            0% {
-                transform: rotateY(0deg);
-            }
-            100% {
-                transform: rotateY(360deg);
-            }
-        }
-        
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        /* Login Container */
-        .login-container {
-            min-height: 100vh;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+
+        /* ========== CART SIDEBAR ========== */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        
-        .login-container.visible {
+        .cart-overlay.open {
             opacity: 1;
+            pointer-events: auto;
         }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .login-header h1 {
-            font-size: 42px;
-            font-weight: 800;
-            color: white;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            letter-spacing: -0.5px;
-        }
-        
-        .login-header p {
-            color: rgba(255,255,255,0.9);
-            font-size: 16px;
-            font-weight: 400;
-        }
-        
-        .login-card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 24px;
-            padding: 30px;
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -440px;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
-        }
-        
-        .nav-tabs .nav-link {
-            color: #495057;
-            border: none;
-            font-weight: 500;
-        }
-        
-        .nav-tabs .nav-link.active {
-            color: #667eea;
-            background: transparent;
-            border-bottom: 3px solid #667eea;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 30px;
-            padding: 12px;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
-        }
-        
-        .dashboard-container {
-            display: none;
-            max-width: 900px;
-            margin: 30px auto;
-            background: #0b0f1c;
-            border-radius: 32px;
-            padding: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
-        
-        .navbar-brand {
-            font-size: 24px;
-            font-weight: 700;
-            color: white !important;
-        }
-        
-        .stats-row {
+            height: 100vh;
+            background: var(--surface);
+            z-index: 201;
+            transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
-            gap: 16px;
+            flex-direction: column;
+            box-shadow: -4px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        .cart-sidebar.open {
+            right: 0;
+        }
+        .cart-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .btn-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-close:hover {
+            background: #e2e8f0;
+        }
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .cart-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+        .cart-empty .icon {
+            font-size: 4rem;
             margin-bottom: 16px;
         }
-        
-        .stats-row .stat-card {
-            flex: 1;
-            background: #1e2538 !important;
-            border-radius: 20px;
-            padding: 20px 12px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: transform 0.2s;
-        }
-        
-        .stats-row .stat-card:hover {
-            transform: translateY(-4px);
-        }
-        
-        .stat-card h5 {
-            font-size: 15px;
-            color: #8a8f9c;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .stat-card .display-6 {
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-            margin: 0;
-        }
-        
-        .add-trade-btn {
-            background: #2f3a5c;
-            border: none;
-            border-radius: 40px;
-            padding: 14px 24px;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 24px;
-            display: inline-flex;
+        .cart-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: var(--radius-sm);
             align-items: center;
-            gap: 8px;
+            transition: var(--transition);
         }
-        
-        .add-trade-btn:hover {
-            background: #3d4a70;
+        .cart-item:hover {
+            background: #f1f5f9;
         }
-        
-        .table {
-            color: #b0b7c4;
-            background: #131a2c;
-            border-radius: 20px;
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-sm);
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+        .cart-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .cart-item-info h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
             overflow: hidden;
-            font-size: 14px;
+            text-overflow: ellipsis;
         }
-        
-        .table thead th {
-            background: #1e2538;
-            color: #8a8f9c;
+        .cart-item-info .cart-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qty-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .qty-num {
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+        .btn-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.85rem;
             font-weight: 500;
-            border: none;
-            padding: 14px 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: var(--transition);
         }
-        
-        .table tbody td {
-            border-color: #1e2538;
-            padding: 12px;
+        .btn-remove:hover {
+            background: #fef2f2;
         }
-        
-        .profit { color: #4caf50; font-weight: 600; }
-        .loss { color: #f44336; font-weight: 600; }
-        
-        .action-btn {
-            background: transparent;
-            border: none;
-            color: #8a8f9c;
-            font-size: 16px;
-            margin: 0 4px;
+        .cart-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
         }
-        
-        .action-btn.edit:hover { color: #ffc107; }
-        .action-btn.delete:hover { color: #f44336; }
-        
-        .modal-content {
-            background: #1e2538;
-            color: white;
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .btn-checkout {
+            width: 100%;
+            padding: 14px;
             border-radius: 28px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
         }
-        
-        .form-control, .form-select {
-            background: #0f1422;
-            border: 1px solid #2f3a5c;
-            color: white;
-            border-radius: 16px;
-            padding: 12px;
+        .btn-checkout:hover {
+            background: var(--primary-hover);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
         }
-        
-        .form-control:focus {
-            border-color: #667eea;
+        .btn-checkout:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
             box-shadow: none;
         }
-        
-        .btn-close { filter: invert(1); }
-        .dev-only { display: none; }
-        body.dev-mode .dev-only { display: block; }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(120px);
+            background: #1e293b;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 300;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-lg);
+            white-space: nowrap;
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ========== MODAL ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 250;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 100%;
+            padding: 32px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .modal .icon-check {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #d1fae5;
+            color: var(--success);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        .modal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .modal p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        .modal .btn {
+            padding: 12px 32px;
+            border-radius: 24px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        .modal .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+        .modal .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: var(--surface);
+                flex-direction: column;
+                padding: 16px;
+                border-bottom: 2px solid var(--border);
+                box-shadow: var(--shadow-lg);
+                gap: 4px;
+            }
+            .nav-links.open {
+                display: flex;
+            }
+            .nav-links a {
+                padding: 12px 16px;
+                border-radius: var(--radius-sm);
+            }
+            .hamburger {
+                display: block;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .hero-stats {
+                gap: 20px;
+            }
+            .hero-stat .num {
+                font-size: 1.4rem;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+            .cart-sidebar {
+                max-width: 100%;
+                right: -100%;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+            .product-info {
+                padding: 10px 12px 14px;
+            }
+            .product-info h3 {
+                font-size: 0.9rem;
+            }
+            .product-info .price {
+                font-size: 1.1rem;
+            }
+            .btn-add-cart {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+            .hero {
+                padding: 40px 16px 50px;
+            }
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            .nav-container {
+                padding: 0 12px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Splash Screen (initial app load) -->
-    <div class="splash-container" id="splashScreen">
-        <div class="splash-content">
-            <div class="splash-icon">
-                <i class="fas fa-book-open"></i>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a class="nav-brand" onclick="scrollToSection('hero')">
+                <span class="icon">🛍️</span> ShopVibe
+            </a>
+            <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a class="active" onclick="scrollToSection('hero'); closeMobileMenu();">Home</a></li>
+                <li><a onclick="scrollToSection('products-section'); closeMobileMenu();">Shop</a></li>
+                <li><a onclick="scrollToSection('products-section'); filterProducts('all'); closeMobileMenu();">All Products</a></li>
+                <li><a onclick="scrollToSection('products-section'); filterProducts('electronics'); closeMobileMenu();">Electronics</a></li>
+                <li><a onclick="scrollToSection('products-section'); filterProducts('clothing'); closeMobileMenu();">Clothing</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn-icon" id="cartBtn" aria-label="Open cart">
+                    🛒
+                    <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+                </button>
             </div>
-            <div class="splash-title">Edge Journal</div>
-            <div class="splash-subtitle">Your Trading Companion</div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1>Discover Your Style</h1>
+            <p>Shop the latest trends with unbeatable prices. Fast shipping, easy returns, and 24/7 support.</p>
+            <button class="btn-cta" onclick="scrollToSection('products-section')">🛒 Start Shopping</button>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="num">10K+</div><div class="label">Products</div></div>
+                <div class="hero-stat"><div class="num">50K+</div><div class="label">Happy Customers</div></div>
+                <div class="hero-stat"><div class="num">⭐ 4.8</div><div class="label">Avg Rating</div></div>
+                <div class="hero-stat"><div class="num">24/7</div><div class="label">Support</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PRODUCTS SECTION ==================== -->
+    <div class="main-container" id="products-section">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">🛍️ Trending Products</h2>
+                <p class="section-subtitle">Handpicked just for you</p>
+            </div>
+            <div class="filter-tags">
+                <button class="filter-tag active" onclick="filterProducts('all')">All</button>
+                <button class="filter-tag" onclick="filterProducts('electronics')">📱 Electronics</button>
+                <button class="filter-tag" onclick="filterProducts('clothing')">👕 Clothing</button>
+                <button class="filter-tag" onclick="filterProducts('accessories')">💎 Accessories</button>
+                <button class="filter-tag" onclick="filterProducts('home')">🏠 Home</button>
+            </div>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products rendered by JS -->
         </div>
     </div>
 
-    <!-- Loading Screen (after login) -->
-    <div class="loading-container" id="loadingScreen">
-        <div class="loading-content">
-            <div class="loading-icon">
-                <i class="fas fa-book"></i>
+    <!-- ==================== CART OVERLAY ==================== -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- ==================== CART SIDEBAR ==================== -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>🛒 Your Cart</h2>
+            <button class="btn-close" id="cartCloseBtn">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <div class="icon">🛒</div>
+                <p>Your cart is empty</p>
+                <small>Add some products to get started!</small>
             </div>
-            <div class="loading-title">Loading Journal</div>
-            <div class="loading-spinner"></div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="btn-checkout" id="btnCheckout" disabled onclick="checkout()">Proceed to Checkout</button>
         </div>
     </div>
 
-    <!-- Login Container -->
-    <div class="login-container" id="loginContainer">
-        <div style="width: 100%; max-width: 420px;">
-            <div class="login-header">
-                <h1>Edge Journal</h1>
-                <p>Your trading companion</p>
-            </div>
-            <div class="login-card">
-                <ul class="nav nav-tabs justify-content-center mb-4" id="authTabs">
-                    <li class="nav-item"><button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login">Login</button></li>
-                    <li class="nav-item"><button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup">Sign Up</button></li>
-                </ul>
-                <div class="tab-content">
-                    <!-- Login Tab -->
-                    <div class="tab-pane fade show active" id="login">
-                        <form id="loginForm">
-                            <div class="mb-3">
-                                <input type="email" class="form-control" id="loginEmail" placeholder="Email" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
-                        </form>
-
-                        <!-- Dev-only link to view all stored users -->
-                        <div class="text-center dev-only">
-                            <a href="#" class="text-muted small" onclick="viewAllStoredData()"><i class="fas fa-database me-1"></i>View all stored users & trades (dev)</a>
-                        </div>
-                    </div>
-
-                    <!-- Signup Tab -->
-                    <div class="tab-pane fade" id="signup">
-                        <form id="signupForm">
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="email" class="form-control" id="signupEmail" placeholder="Email" required>
-                            </div>
-                            <div class="mb-3">
-                                <input type="password" class="form-control" id="signupPassword" placeholder="Password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
-                        </form>
-                    </div>
-                </div>
-                <div id="messageArea" class="mt-3"></div>
-            </div>
+    <!-- ==================== CHECKOUT MODAL ==================== -->
+    <div class="modal-overlay" id="checkoutModal">
+        <div class="modal">
+            <div class="icon-check">✅</div>
+            <h2>Order Confirmed!</h2>
+            <p>Thank you for your purchase. Your order <strong>#ORD-<span id="orderNum"></span></strong> has been placed successfully.</p>
+            <p style="font-size:0.9rem;">You'll receive a confirmation email shortly.</p>
+            <button class="btn btn-primary" onclick="closeCheckoutModal()">Continue Shopping</button>
         </div>
     </div>
 
-    <!-- Dashboard Container -->
-    <div class="dashboard-container" id="dashboardContainer">
-        <nav class="navbar navbar-dark bg-transparent mb-3">
-            <div class="container-fluid px-0">
-                <span class="navbar-brand">📘 Edge Journal</span>
-                <div class="ms-auto">
-                    <span class="text-white-50 me-3" id="welcomeUser"></span>
-                    <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
-                </div>
-            </div>
-        </nav>
+    <!-- ==================== TOAST ==================== -->
+    <div class="toast" id="toast"></div>
 
-        <!-- Stats Cards -->
-        <div class="stats-flex-container">
-            <div class="stats-row">
-                <div class="stat-card">
-                    <h5><i class="fas fa-chart-bar me-2" style="color:#8a8f9c;"></i>Total Trades</h5>
-                    <p class="display-6" id="totalTrades">0</p>
-                </div>
-                <div class="stat-card">
-                    <h5><i class="fas fa-trophy me-2" style="color:#4caf50;"></i>Winning</h5>
-                    <p class="display-6" id="winningTrades">0</p>
-                </div>
-            </div>
-            <div class="stats-row">
-                <div class="stat-card">
-                    <h5><i class="fas fa-times-circle me-2" style="color:#f44336;"></i>Losing</h5>
-                    <p class="display-6" id="losingTrades">0</p>
-                </div>
-                <div class="stat-card">
-                    <h5><i class="fas fa-percent me-2" style="color:#ffc107;"></i>Win Rate</h5>
-                    <p class="display-6" id="winRate">0%</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Trade Button -->
-        <button class="btn add-trade-btn" data-bs-toggle="modal" data-bs-target="#tradeModal" id="addTradeBtn">
-            <i class="fas fa-plus-circle"></i> Add New Trade
-        </button>
-
-        <!-- Trades Table -->
-        <div class="trades-section">
-            <h3 style="color: white;"><i class="fas fa-list me-2"></i>Trades</h3>
-            <div class="table-responsive">
-                <table class="table table-sm">
-                    <thead>
-                        <tr><th>Date</th><th>Instr.</th><th>Dir</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Actions</th></tr>
-                    </thead>
-                    <tbody id="tradesTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Trade Modal -->
-    <div class="modal fade" id="tradeModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tradeModalLabel">Add New Trade</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="tradeForm">
-                        <input type="hidden" id="tradeId">
-                        <div class="mb-3">
-                            <label for="tradeDate" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="tradeDate" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tradeInstrument" class="form-label">Instrument</label>
-                            <input type="text" class="form-control" id="tradeInstrument" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tradeDirection" class="form-label">Direction</label>
-                            <select class="form-select" id="tradeDirection">
-                                <option value="LONG">Long</option>
-                                <option value="SHORT">Short</option>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <label for="tradeEntryPrice" class="form-label">Entry</label>
-                                <input type="number" step="0.00001" class="form-control" id="tradeEntryPrice" required>
-                            </div>
-                            <div class="col-6 mb-3">
-                                <label for="tradeExitPrice" class="form-label">Exit</label>
-                                <input type="number" step="0.00001" class="form-control" id="tradeExitPrice" required>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <label for="tradeStopLoss" class="form-label">Stop</label>
-                                <input type="number" step="0.00001" class="form-control" id="tradeStopLoss">
-                            </div>
-                            <div class="col-6 mb-3">
-                                <label for="tradeTakeProfit" class="form-label">TP</label>
-                                <input type="number" step="0.00001" class="form-control" id="tradeTakeProfit">
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tradeProfitLoss" class="form-label">P&L ($)</label>
-                            <input type="number" step="0.01" class="form-control" id="tradeProfitLoss" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tradeNotes" class="form-label">Notes</label>
-                            <textarea class="form-control" id="tradeNotes" rows="2"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="saveTradeBtn">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ---------- Splash Screen (initial load) ----------
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is already logged in
-            const savedUser = localStorage.getItem(CURRENT_USER_KEY);
-            if (savedUser) {
-                // User is logged in, skip splash and go straight to dashboard
-                document.getElementById('splashScreen').style.display = 'none';
-                currentUser = JSON.parse(savedUser);
-                loadData();
-                document.getElementById('dashboardContainer').style.display = 'block';
-                renderDashboard();
-            } else {
-                // Show splash for 2.5 seconds, then show login
-                setTimeout(function() {
-                    const splash = document.getElementById('splashScreen');
-                    const loginContainer = document.getElementById('loginContainer');
-                    
-                    splash.style.opacity = '0';
-                    
-                    setTimeout(function() {
-                        splash.style.display = 'none';
-                        loginContainer.style.display = 'flex';
-                        setTimeout(function() {
-                            loginContainer.classList.add('visible');
-                        }, 50);
-                    }, 1000);
-                }, 2500);
+        // ============ PRODUCT DATA ============
+        const products = [
+            { id: 1, name: 'Wireless Noise-Canceling Headphones', category: 'electronics', price: 149.99,
+                oldPrice: 199.99, rating: 4.8, reviews: 2341, badge: 'sale', emoji: '🎧' },
+            { id: 2, name: 'Slim Fit Cotton T-Shirt', category: 'clothing', price: 29.99, oldPrice: null, rating: 4.5,
+                reviews: 1892, badge: null, emoji: '👕' },
+            { id: 3, name: 'Smart Watch Pro Series', category: 'electronics', price: 299.99, oldPrice: 349.99,
+                rating: 4.7, reviews: 987, badge: 'sale', emoji: '⌚' },
+            { id: 4, name: 'Leather Crossbody Bag', category: 'accessories', price: 79.99, oldPrice: null, rating: 4.6,
+                reviews: 654, badge: null, emoji: '👜' },
+            { id: 5, name: 'Premium Yoga Mat', category: 'home', price: 45.99, oldPrice: 59.99, rating: 4.4,
+                reviews: 1203, badge: 'sale', emoji: '🧘' },
+            { id: 6, name: 'Classic Denim Jacket', category: 'clothing', price: 89.99, oldPrice: null, rating: 4.7,
+                reviews: 2100, badge: 'new', emoji: '🧥' },
+            { id: 7, name: 'Bluetooth Portable Speaker', category: 'electronics', price: 69.99, oldPrice: 89.99,
+                rating: 4.6, reviews: 3400, badge: 'sale', emoji: '🔊' },
+            { id: 8, name: 'Stainless Steel Water Bottle', category: 'home', price: 24.99, oldPrice: null, rating: 4.3,
+                reviews: 876, badge: null, emoji: '🍶' },
+            { id: 9, name: 'Aviator Sunglasses', category: 'accessories', price: 55.99, oldPrice: 75.99, rating: 4.5,
+                reviews: 543, badge: 'sale', emoji: '🕶️' },
+            { id: 10, name: 'Running Sneakers Ultra', category: 'clothing', price: 119.99, oldPrice: 149.99,
+                rating: 4.9, reviews: 4567, badge: 'best', emoji: '👟' },
+            { id: 11, name: 'Wireless Charging Pad', category: 'electronics', price: 39.99, oldPrice: null, rating: 4.4,
+                reviews: 789, badge: null, emoji: '🔋' },
+            { id: 12, name: 'Minimalist Desk Lamp', category: 'home', price: 34.99, oldPrice: 44.99, rating: 4.6,
+                reviews: 432, badge: 'sale', emoji: '💡' },
+        ];
+
+        // ============ STATE ============
+        let cart = [];
+        let wishlist = [];
+        let currentFilter = 'all';
+
+        // Load cart from localStorage
+        function loadCart() {
+            const saved = localStorage.getItem('shopvibe_cart');
+            if (saved) {
+                try { cart = JSON.parse(saved); } catch (e) { cart = []; }
             }
-        });
-
-        // ---------- localStorage Keys ----------
-        const USERS_KEY = 'edge_journal_users';
-        const TRADES_PREFIX = 'edge_trades_';
-        const CURRENT_USER_KEY = 'edge_current_user';
-
-        // ---------- Global variables ----------
-        let trades = [];
-        let currentUser = null;
-
-        // ---------- User management ----------
-        function getUsers() {
-            return JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-        }
-        function saveUsers(users) {
-            localStorage.setItem(USERS_KEY, JSON.stringify(users));
         }
 
-        // ---------- Trade management (per user) ----------
-        function getTradesKey() {
-            return currentUser ? `${TRADES_PREFIX}${currentUser.id}` : null;
-        }
-        function getTrades() {
-            if (!currentUser) return [];
-            return JSON.parse(localStorage.getItem(getTradesKey()) || '[]');
-        }
-        function saveTrades() {
-            if (!currentUser) return;
-            localStorage.setItem(getTradesKey(), JSON.stringify(trades));
-        }
-        function loadData() {
-            if (!currentUser) return;
-            trades = getTrades();
+        function saveCart() {
+            localStorage.setItem('shopvibe_cart', JSON.stringify(cart));
         }
 
-        // ---------- Helper Functions ----------
-        function showMessage(message, type = 'danger', container = 'messageArea') {
-            const msgDiv = document.getElementById(container);
-            if (!msgDiv) return;
-            msgDiv.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show">${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
-            setTimeout(() => {
-                const alert = msgDiv.querySelector('.alert');
-                if (alert) alert.remove();
-            }, 3000);
-        }
-
-        function generateId() {
-            return Date.now() + Math.floor(Math.random() * 1000);
-        }
-
-        // ---------- Dashboard Rendering ----------
-        function renderDashboard() {
-            const total = trades.length;
-            const winning = trades.filter(t => t.profitLoss > 0).length;
-            const losing = total - winning;
-            const winRate = total ? ((winning / total) * 100).toFixed(1) : 0;
-
-            document.getElementById('totalTrades').textContent = total;
-            document.getElementById('winningTrades').textContent = winning;
-            document.getElementById('losingTrades').textContent = losing;
-            document.getElementById('winRate').textContent = winRate + '%';
-            if (currentUser) {
-                document.getElementById('welcomeUser').textContent = `Hi, ${currentUser.name}`;
+        function loadWishlist() {
+            const saved = localStorage.getItem('shopvibe_wishlist');
+            if (saved) {
+                try { wishlist = JSON.parse(saved); } catch (e) { wishlist = []; }
             }
-
-            const tbody = document.getElementById('tradesTableBody');
-            if (!trades.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center">No trades yet</td></tr>';
-                return;
-            }
-
-            const sorted = [...trades].sort((a,b) => new Date(b.date) - new Date(a.date));
-            let html = '';
-            sorted.forEach(trade => {
-                const pnlClass = trade.profitLoss > 0 ? 'profit' : 'loss';
-                html += `<tr>
-                    <td>${new Date(trade.date).toLocaleDateString()}</td>
-                    <td>${trade.instrument}</td>
-                    <td>${trade.direction}</td>
-                    <td>${trade.entryPrice}</td>
-                    <td>${trade.exitPrice}</td>
-                    <td class="${pnlClass}">$${trade.profitLoss.toFixed(2)}</td>
-                    <td>
-                        <button class="action-btn edit" onclick="editTrade('${trade.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="action-btn delete" onclick="deleteTrade('${trade.id}')"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
         }
 
-        // ---------- Trade CRUD ----------
-        window.editTrade = function(id) {
-            const trade = trades.find(t => t.id == id);
-            if (!trade) return;
+        function saveWishlist() {
+            localStorage.setItem('shopvibe_wishlist', JSON.stringify(wishlist));
+        }
 
-            document.getElementById('tradeId').value = trade.id;
-            document.getElementById('tradeDate').value = trade.date.split('T')[0];
-            document.getElementById('tradeInstrument').value = trade.instrument;
-            document.getElementById('tradeDirection').value = trade.direction;
-            document.getElementById('tradeEntryPrice').value = trade.entryPrice;
-            document.getElementById('tradeExitPrice').value = trade.exitPrice;
-            document.getElementById('tradeStopLoss').value = trade.stopLoss || '';
-            document.getElementById('tradeTakeProfit').value = trade.takeProfit || '';
-            document.getElementById('tradeProfitLoss').value = trade.profitLoss;
-            document.getElementById('tradeNotes').value = trade.notes || '';
+        // ============ RENDER PRODUCTS ============
+        function renderProducts(filter = 'all') {
+            currentFilter = filter;
+            const grid = document.getElementById('productsGrid');
+            const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
 
-            document.getElementById('tradeModalLabel').textContent = 'Edit Trade';
-            new bootstrap.Modal(document.getElementById('tradeModal')).show();
-        };
-
-        window.deleteTrade = function(id) {
-            if (!confirm('Delete this trade?')) return;
-            const trade = trades.find(t => t.id == id);
-            if (trade) {
-                trades = trades.filter(t => t.id != id);
-                saveTrades();
-                renderDashboard();
-            }
-        };
-
-        document.getElementById('addTradeBtn').addEventListener('click', function() {
-            document.getElementById('tradeForm').reset();
-            document.getElementById('tradeId').value = '';
-            document.getElementById('tradeDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('tradeModalLabel').textContent = 'Add New Trade';
-        });
-
-        document.getElementById('saveTradeBtn').addEventListener('click', function() {
-            const id = document.getElementById('tradeId').value;
-            const tradeData = {
-                date: document.getElementById('tradeDate').value,
-                instrument: document.getElementById('tradeInstrument').value,
-                direction: document.getElementById('tradeDirection').value,
-                entryPrice: parseFloat(document.getElementById('tradeEntryPrice').value),
-                exitPrice: parseFloat(document.getElementById('tradeExitPrice').value),
-                stopLoss: document.getElementById('tradeStopLoss').value ? parseFloat(document.getElementById('tradeStopLoss').value) : null,
-                takeProfit: document.getElementById('tradeTakeProfit').value ? parseFloat(document.getElementById('tradeTakeProfit').value) : null,
-                profitLoss: parseFloat(document.getElementById('tradeProfitLoss').value),
-                notes: document.getElementById('tradeNotes').value
-            };
-
-            if (id) {
-                // Edit
-                const index = trades.findIndex(t => t.id == id);
-                if (index !== -1) {
-                    tradeData.id = id;
-                    trades[index] = tradeData;
+            // Update filter tags
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.classList.remove('active');
+                if (tag.textContent.toLowerCase().includes(filter) || (filter === 'all' && tag.textContent ===
+                        'All')) {
+                    tag.classList.add('active');
                 }
-            } else {
-                // Add
-                tradeData.id = generateId();
-                trades.push(tradeData);
-            }
-
-            saveTrades();
-            renderDashboard();
-            bootstrap.Modal.getInstance(document.getElementById('tradeModal')).hide();
-        });
-
-        // ---------- Login with loading screen ----------
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            const users = getUsers();
-            const user = users.find(u => u.email === email && u.password === password);
-            if (!user) {
-                showMessage('Invalid credentials.', 'danger');
-                return;
-            }
-
-            // Show loading screen
-            const loginContainer = document.getElementById('loginContainer');
-            const loadingScreen = document.getElementById('loadingScreen');
-            
-            loginContainer.classList.remove('visible');
-            setTimeout(() => {
-                loginContainer.style.display = 'none';
-                loadingScreen.style.display = 'flex';
-                
-                // Simulate loading time (1.5 seconds)
-                setTimeout(() => {
-                    loginUser(user);
-                    
-                    // Fade out loading, show dashboard
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        loadingScreen.style.display = 'none';
-                        loadingScreen.style.opacity = '1'; // Reset for next time
-                        document.getElementById('dashboardContainer').style.display = 'block';
-                        renderDashboard();
-                    }, 500);
-                }, 1500);
-            }, 300);
-        });
-
-        // ---------- Signup ----------
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value;
-
-            if (!name || !email || !password) {
-                showMessage('All fields required.', 'warning');
-                return;
-            }
-
-            const users = getUsers();
-            if (users.find(u => u.email === email)) {
-                showMessage('Email already exists.', 'danger');
-                return;
-            }
-
-            const newUser = { id: generateId(), name, email, password };
-            users.push(newUser);
-            saveUsers(users);
-
-            document.getElementById('loginEmail').value = email;
-            document.getElementById('loginPassword').value = '';
-            new bootstrap.Tab(document.getElementById('login-tab')).show();
-            showMessage('Signup successful! Please login.', 'success');
-            e.target.reset();
-        });
-
-        function loginUser(user) {
-            currentUser = { id: user.id, name: user.name, email: user.email };
-            localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
-            loadData();
-        }
-
-        // ---------- Logout ----------
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem(CURRENT_USER_KEY);
-            currentUser = null;
-            document.getElementById('dashboardContainer').style.display = 'none';
-            document.getElementById('loginContainer').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('loginContainer').classList.add('visible');
-            }, 50);
-        });
-
-        // ---------- Dev mode: access to ALL stored data ----------
-        function enableDevMode() {
-            if (new URLSearchParams(window.location.search).get('dev') === 'true') {
-                document.body.classList.add('dev-mode');
-            }
-        }
-
-        window.viewAllStoredData = function() {
-            const users = getUsers();
-            let output = "=== ALL STORED USERS ===\n";
-            users.forEach(u => {
-                output += `ID: ${u.id}, Name: ${u.name}, Email: ${u.email}, Password: ${u.password}\n`;
-                // Load this user's trades
-                const tradeKey = `${TRADES_PREFIX}${u.id}`;
-                const userTrades = JSON.parse(localStorage.getItem(tradeKey) || '[]');
-                output += `  Trades (${userTrades.length}):\n`;
-                userTrades.forEach(t => {
-                    output += `    - ${t.date} ${t.instrument} ${t.direction} P&L: $${t.profitLoss}\n`;
-                });
             });
-            alert(output);
-            console.log(output);
-        };
 
-        // ---------- Initialize ----------
-        (function init() {
-            enableDevMode();
+            grid.innerHTML = filtered.map(p => {
+                const badgeHTML = p.badge ? `<span class="badge ${p.badge === 'sale' ? 'sale' : ''}">${p.badge === 'sale' ? 'SALE' : p.badge === 'new' ? 'NEW' : 'BEST'}</span>` : '';
+                const oldPriceHTML = p.oldPrice ? `<span class="price-old">$${p.oldPrice.toFixed(2)}</span>` : '';
+                const isLiked = wishlist.includes(p.id);
+                const stars = '⭐'.repeat(Math.floor(p.rating));
+                return `
+                    <div class="product-card" data-id="${p.id}">
+                        <div class="img-wrapper">
+                            ${badgeHTML}
+                            <button class="wishlist-btn ${isLiked ? 'liked' : ''}" onclick="toggleWishlist(event, ${p.id})" aria-label="Wishlist">${isLiked ? '❤️' : '🤍'}</button>
+                            <div class="placeholder-img">${p.emoji}</div>
+                        </div>
+                        <div class="product-info">
+                            <div class="category">${p.category}</div>
+                            <h3>${p.name}</h3>
+                            <div class="rating">${stars} <span>(${p.reviews.toLocaleString()})</span></div>
+                            <div class="price-row">
+                                <span class="price">$${p.price.toFixed(2)}</span>
+                                ${oldPriceHTML}
+                            </div>
+                            <button class="btn-add-cart" onclick="addToCart(event, ${p.id})">
+                                🛒 Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
 
-            // Create demo user if no users exist
-            const users = getUsers();
-            if (!users.length) {
-                users.push({
-                    id: 1,
-                    name: 'Demo User',
-                    email: 'demo@example.com',
-                    password: 'password123'
-                });
-                saveUsers(users);
-                console.log('Demo user created. Email: demo@example.com, Password: password123');
+            // Re-attach scroll if needed
+            if (filter !== 'all' && window.location.hash !== '#products-section') {
+                setTimeout(() => scrollToSection('products-section'), 100);
             }
-        })();
+        }
+
+        // ============ CART FUNCTIONS ============
+        function addToCart(event, productId) {
+            event.stopPropagation();
+            const existing = cart.find(item => item.productId === productId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ productId, qty: 1 });
+            }
+            saveCart();
+            updateCartUI();
+            showToast('✅ Added to cart!');
+
+            // Button animation
+            const btn = event.target.closest('.btn-add-cart');
+            if (btn) {
+                btn.classList.add('added');
+                btn.textContent = '✓ Added!';
+                setTimeout(() => {
+                    btn.classList.remove('added');
+                    btn.innerHTML = '🛒 Add to Cart';
+                }, 1200);
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.productId !== productId);
+            saveCart();
+            updateCartUI();
+            showToast('🗑️ Removed from cart');
+        }
+
+        function updateQty(productId, delta) {
+            const item = cart.find(i => i.productId === productId);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            saveCart();
+            updateCartUI();
+        }
+
+        function getCartTotal() {
+            return cart.reduce((total, item) => {
+                const product = products.find(p => p.id === item.productId);
+                return total + (product ? product.price * item.qty : 0);
+            }, 0);
+        }
+
+        function getCartCount() {
+            return cart.reduce((sum, item) => sum + item.qty, 0);
+        }
+
+        function updateCartUI() {
+            const count = getCartCount();
+            const badge = document.getElementById('cartBadge');
+            const totalEl = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('btnCheckout');
+            const cartItemsContainer = document.getElementById('cartItems');
+
+            // Badge
+            if (count > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = count;
+                badge.style.animation = 'none';
+                badge.offsetHeight;
+                badge.style.animation = 'popIn 0.3s ease';
+            } else {
+                badge.style.display = 'none';
+            }
+
+            // Total
+            totalEl.textContent = `$${getCartTotal().toFixed(2)}`;
+            checkoutBtn.disabled = cart.length === 0;
+
+            // Cart items
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <div class="icon">🛒</div>
+                        <p>Your cart is empty</p>
+                        <small>Add some products to get started!</small>
+                    </div>
+                `;
+            } else {
+                cartItemsContainer.innerHTML = cart.map(item => {
+                    const product = products.find(p => p.id === item.productId);
+                    if (!product) return '';
+                    return `
+                        <div class="cart-item">
+                            <div class="cart-item-img">${product.emoji}</div>
+                            <div class="cart-item-info">
+                                <h4>${product.name}</h4>
+                                <span class="cart-price">$${product.price.toFixed(2)}</span>
+                                <div class="qty-control">
+                                    <button class="qty-btn" onclick="updateQty(${product.id}, -1)">−</button>
+                                    <span class="qty-num">${item.qty}</span>
+                                    <button class="qty-btn" onclick="updateQty(${product.id}, 1)">+</button>
+                                </div>
+                            </div>
+                            <button class="btn-remove" onclick="removeFromCart(${product.id})">🗑️</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ============ WISHLIST ============
+        function toggleWishlist(event, productId) {
+            event.stopPropagation();
+            const idx = wishlist.indexOf(productId);
+            if (idx > -1) {
+                wishlist.splice(idx, 1);
+                showToast('🤍 Removed from wishlist');
+            } else {
+                wishlist.push(productId);
+                showToast('❤️ Added to wishlist!');
+            }
+            saveWishlist();
+            renderProducts(currentFilter);
+        }
+
+        // ============ CART SIDEBAR ============
+        function openCart() {
+            document.getElementById('cartSidebar').classList.add('open');
+            document.getElementById('cartOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+            updateCartUI();
+        }
+
+        function closeCart() {
+            document.getElementById('cartSidebar').classList.remove('open');
+            document.getElementById('cartOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // ============ CHECKOUT ============
+        function checkout() {
+            if (cart.length === 0) return;
+            const orderNum = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('orderNum').textContent = orderNum;
+            document.getElementById('checkoutModal').classList.add('open');
+            closeCart();
+            // Clear cart
+            cart = [];
+            saveCart();
+            updateCartUI();
+            renderProducts(currentFilter);
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.remove('open');
+            scrollToSection('products-section');
+        }
+
+        // ============ TOAST ============
+        let toastTimeout;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // ============ FILTER ============
+        function filterProducts(category) {
+            renderProducts(category);
+            // Update nav active
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            const navLink = document.querySelector(`.nav-links a[onclick*="${category}"]`);
+            if (navLink) navLink.classList.add('active');
+            scrollToSection('products-section');
+        }
+
+        // ============ SCROLL ============
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // ============ MOBILE MENU ============
+        function closeMobileMenu() {
+            document.getElementById('navLinks').classList.remove('open');
+        }
+
+        // ============ INIT ============
+        function init() {
+            loadCart();
+            loadWishlist();
+            renderProducts('all');
+            updateCartUI();
+
+            // Cart button
+            document.getElementById('cartBtn').addEventListener('click', openCart);
+            document.getElementById('cartCloseBtn').addEventListener('click', closeCart);
+            document.getElementById('cartOverlay').addEventListener('click', closeCart);
+
+            // Hamburger
+            document.getElementById('hamburger').addEventListener('click', () => {
+                document.getElementById('navLinks').classList.toggle('open');
+            });
+
+            // Close mobile menu on outside click
+            document.addEventListener('click', (e) => {
+                const navLinks = document.getElementById('navLinks');
+                const hamburger = document.getElementById('hamburger');
+                if (!navLinks.contains(e.target) && !hamburger.contains(e.target) && navLinks.classList
+                    .contains('open')) {
+                    navLinks.classList.remove('open');
+                }
+            });
+
+            // Keyboard: Escape to close cart
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (document.getElementById('cartSidebar').classList.contains('open')) {
+                        closeCart();
+                    }
+                    if (document.getElementById('checkoutModal').classList.contains('open')) {
+                        closeCheckoutModal();
+                    }
+                }
+            });
+
+            // Navbar scroll effect
+            window.addEventListener('scroll', () => {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 10) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Checkout modal overlay click
+            document.getElementById('checkoutModal').addEventListener('click', function(e) {
+                if (e.target === this) closeCheckoutModal();
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
