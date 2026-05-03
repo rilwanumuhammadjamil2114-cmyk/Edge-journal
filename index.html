@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShopVibe - Your Ultimate Shopping Destination</title>
+    <title>RM Wears - Your Ultimate Style Destination</title>
     <style>
         :root {
             --primary: #4f46e5;
@@ -826,7 +826,7 @@
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <a class="nav-brand" onclick="scrollToSection('hero')">
-                <span class="icon">🛍️</span> ShopVibe
+                <span class="icon">👕</span> RM Wears
             </a>
             <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
             <ul class="nav-links" id="navLinks">
@@ -848,9 +848,9 @@
     <!-- ==================== HERO ==================== -->
     <section class="hero" id="hero">
         <div class="hero-content">
-            <h1>Discover Your Style</h1>
-            <p>Shop the latest trends with unbeatable prices. Fast shipping, easy returns, and 24/7 support.</p>
-            <button class="btn-cta" onclick="scrollToSection('products-section')">🛒 Start Shopping</button>
+            <h1>RM Wears – Style Redefined</h1>
+            <p>Discover fresh fashion & curated essentials. Unbeatable prices, fast shipping, and easy returns.</p>
+            <button class="btn-cta" onclick="scrollToSection('products-section')">🛒 Explore Collection</button>
             <div class="hero-stats">
                 <div class="hero-stat"><div class="num">10K+</div><div class="label">Products</div></div>
                 <div class="hero-stat"><div class="num">50K+</div><div class="label">Happy Customers</div></div>
@@ -864,8 +864,8 @@
     <div class="main-container" id="products-section">
         <div class="section-header">
             <div>
-                <h2 class="section-title">🛍️ Trending Products</h2>
-                <p class="section-subtitle">Handpicked just for you</p>
+                <h2 class="section-title">🛍️ RM Wears Collection</h2>
+                <p class="section-subtitle">Handpicked styles just for you</p>
             </div>
             <div class="filter-tags">
                 <button class="filter-tag active" onclick="filterProducts('all')">All</button>
@@ -893,7 +893,7 @@
             <div class="cart-empty">
                 <div class="icon">🛒</div>
                 <p>Your cart is empty</p>
-                <small>Add some products to get started!</small>
+                <small>Add some styles from RM Wears!</small>
             </div>
         </div>
         <div class="cart-footer">
@@ -910,7 +910,7 @@
         <div class="modal">
             <div class="icon-check">✅</div>
             <h2>Order Confirmed!</h2>
-            <p>Thank you for your purchase. Your order <strong>#ORD-<span id="orderNum"></span></strong> has been placed successfully.</p>
+            <p>Thank you for choosing <strong>RM Wears</strong>. Your order <strong>#RM-<span id="orderNum"></span></strong> has been placed.</p>
             <p style="font-size:0.9rem;">You'll receive a confirmation email shortly.</p>
             <button class="btn btn-primary" onclick="closeCheckoutModal()">Continue Shopping</button>
         </div>
@@ -955,25 +955,25 @@
 
         // Load cart from localStorage
         function loadCart() {
-            const saved = localStorage.getItem('shopvibe_cart');
+            const saved = localStorage.getItem('rmwears_cart');
             if (saved) {
                 try { cart = JSON.parse(saved); } catch (e) { cart = []; }
             }
         }
 
         function saveCart() {
-            localStorage.setItem('shopvibe_cart', JSON.stringify(cart));
+            localStorage.setItem('rmwears_cart', JSON.stringify(cart));
         }
 
         function loadWishlist() {
-            const saved = localStorage.getItem('shopvibe_wishlist');
+            const saved = localStorage.getItem('rmwears_wishlist');
             if (saved) {
                 try { wishlist = JSON.parse(saved); } catch (e) { wishlist = []; }
             }
         }
 
         function saveWishlist() {
-            localStorage.setItem('shopvibe_wishlist', JSON.stringify(wishlist));
+            localStorage.setItem('rmwears_wishlist', JSON.stringify(wishlist));
         }
 
         // ============ RENDER PRODUCTS ============
@@ -1108,7 +1108,7 @@
                     <div class="cart-empty">
                         <div class="icon">🛒</div>
                         <p>Your cart is empty</p>
-                        <small>Add some products to get started!</small>
+                        <small>Add some styles from RM Wears!</small>
                     </div>
                 `;
             } else {
